@@ -52,13 +52,17 @@
     "locationFailed": "Impossible de trouver votre position.",
     "locationFound": "Départ là où vous êtes (±{{accuracy}} m). Seul le secteur est enregistré, jamais l'endroit exact.",
     "errors": {
-      "noLocation": "Partagez d'abord votre position.",
+      "noLocation": "Choisissez votre point de départ parmi les suggestions, ou partagez votre position.",
       "missingPlace": "Indiquez d'où, vers où et le point de rencontre.",
       "past": "Choisissez une heure à venir.",
       "tooFar": "Les marches peuvent être publiées jusqu'à une semaine à l'avance.",
       "network": "Pas de connexion. Vérifiez-la et réessayez.",
       "unknown": "Une erreur s'est produite. Réessayez."
-    }
+    },
+    "startsAtPlace": "Départ au lieu choisi. Seul le secteur est enregistré, jamais l'endroit exact."
+  },
+  "placeSearch": {
+    "credit": "Recherche par Photon · © contributeurs OpenStreetMap"
   },
   "myWalks": {
     "title": "Mes marches",

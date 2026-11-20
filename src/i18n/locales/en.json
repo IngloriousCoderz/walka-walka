@@ -52,13 +52,17 @@
     "locationFailed": "We couldn't find your location.",
     "locationFound": "Starts where you are (±{{accuracy}} m). Only the area is saved, never the exact spot.",
     "errors": {
-      "noLocation": "Share your location first.",
+      "noLocation": "Pick where you start from the suggestions, or share your location.",
       "missingPlace": "Fill in where from, where to and where to meet.",
       "past": "Pick a time in the future.",
       "tooFar": "Walks can be posted up to a week ahead.",
       "network": "No connection. Check it and try again.",
       "unknown": "Something went wrong. Try again."
-    }
+    },
+    "startsAtPlace": "Starts at the place you picked. Only the area is saved, never the exact spot."
+  },
+  "placeSearch": {
+    "credit": "Search by Photon · © OpenStreetMap contributors"
   },
   "myWalks": {
     "title": "My walks",

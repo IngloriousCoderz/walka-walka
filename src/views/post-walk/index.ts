@@ -12,6 +12,9 @@ export const PostWalk = defineType<PostWalkEntity, AppApi>()({
   render(entity: PostWalkEntity, api: AppApi) {
     const geolocation = api.getEntity("geolocation")!
     return this.renderPostWalk({
+      fromField: api.render("fromPlace"),
+      toField: api.render("toPlace"),
+      chosenStart: api.getEntity("fromPlace")?.chosen?.label ?? null,
       values: entity.values,
       problem: entity.problem,
       error: entity.error,

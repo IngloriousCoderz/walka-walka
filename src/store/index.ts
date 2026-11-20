@@ -1,10 +1,12 @@
 import { App as NativeApp } from "@capacitor/app"
 import { SystemBars } from "@capacitor/core"
+import { Geolocation } from "@capacitor/geolocation"
 import { LiveUpdate } from "@capawesome/capacitor-live-update"
 import { createStore } from "@inglorious/store"
 import { liveUpdateManifestUrl } from "@inglorious/supabase"
 import { Toast } from "@inglorious/ui/toast"
 import { withTransitions } from "@inglorious/ui/view-transitions"
+import { createGeolocation } from "@inglorious/web/device/geolocation"
 import { Keyboard } from "@inglorious/web/device/keyboard"
 import { createAppLinks } from "@inglorious/web/native/app-links"
 import { createBackButton } from "@inglorious/web/native/back-button"
@@ -47,6 +49,7 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
     PushPrompt,
     NativeUpdate,
     Auth,
+    Geolocation: createGeolocation({ plugin: Geolocation }),
     Toast,
     Keyboard,
     SystemBars: createSystemBars({ plugin: SystemBars }),
@@ -57,7 +60,7 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
   },
   entities,
   middlewares: [withTransitions(), ...middlewares],
-  // Creates an entity for each type that has none: nearby, postWalk, myWalks, router, i18n, analytics, pushPrompt, nativeUpdate, liveUpdate, auth, toast, keyboard, systemBars, appLinks, pwaUpdate.
+  // Creates an entity for each type that has none: nearby, postWalk, myWalks, router, i18n, analytics, pushPrompt, nativeUpdate, liveUpdate, auth, geolocation, toast, keyboard, systemBars, appLinks, pwaUpdate.
   autoCreateEntities: true,
   // Freezes the state in development, so a write outside a handler throws.
   devMode: import.meta.env.DEV,

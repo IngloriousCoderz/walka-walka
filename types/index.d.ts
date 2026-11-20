@@ -7,10 +7,15 @@ import type {
   EntityType,
   EventsOf,
 } from "@inglorious/store"
+import type { AsyncEvents, RequestStatus } from "@inglorious/store/async"
 import type { ToastEntity, ToastType } from "@inglorious/ui/toast"
 import type { Api, TemplateResult } from "@inglorious/web"
 import type { AnalyticsEntity, AnalyticsType } from "@inglorious/web/analytics"
 import type { AuthEntity, AuthType } from "@inglorious/web/auth"
+import type {
+  GeolocationEntity,
+  GeolocationType,
+} from "@inglorious/web/device/geolocation"
 import type {
   KeyboardEntity,
   KeyboardType,
@@ -37,7 +42,13 @@ import type {
 } from "@inglorious/web/native/update"
 import type { PushPromptEntity, PushPromptType } from "@inglorious/web/push"
 import type { PwaUpdateEntity, PwaUpdateType } from "@inglorious/web/pwa"
-import type { RouterEntity, RouterType } from "@inglorious/web/router"
+import type {
+  RouteChangePayload,
+  RouterEntity,
+  RouterType,
+} from "@inglorious/web/router"
+
+import type { NewWalk, WalkProblem, WalkValues } from "./walks"
 
 // The tabs: walks starting near you, the form to post one, and your own.
 export interface NearbyEntity extends BaseEntity {
@@ -46,6 +57,10 @@ export interface NearbyEntity extends BaseEntity {
 
 export interface PostWalkEntity extends BaseEntity {
   type: "PostWalk"
+  values: WalkValues
+  problem: WalkProblem | null
+  status: "idle" | RequestStatus
+  error: string | null
 }
 
 export interface MyWalksEntity extends BaseEntity {
@@ -76,6 +91,11 @@ export interface AppAuthEntity extends AuthEntity {
   type: "Auth"
   // An email outside SAIT was typed: it needs an invitation.
   isOutsideSait?: boolean
+}
+
+// Where the phone is: shared by the screens that need it.
+export interface AppGeolocationEntity extends GeolocationEntity {
+  type: "Geolocation"
 }
 
 export interface AppToastEntity extends ToastEntity {
@@ -117,6 +137,7 @@ export type AppEntity =
   | AppPushPromptEntity
   | AppNativeUpdateEntity
   | AppAuthEntity
+  | AppGeolocationEntity
   | AppToastEntity
   | AppKeyboardEntity
   | AppSystemBarsEntity
@@ -136,6 +157,7 @@ export interface AppState extends EntitiesState<AppEntity> {
   pushPrompt: AppPushPromptEntity
   nativeUpdate: AppNativeUpdateEntity
   auth: AppAuthEntity
+  geolocation: AppGeolocationEntity
   toast: AppToastEntity
   keyboard: AppKeyboardEntity
   systemBars: AppSystemBarsEntity
@@ -156,6 +178,7 @@ export type AppEvents = EventsOf<
   | PushPromptType
   | NativeUpdateType
   | AuthType
+  | GeolocationType
   | ToastType
   | KeyboardType
   | SystemBarsType
@@ -173,9 +196,18 @@ export type NearbyType = {
   render: (entity: NearbyEntity, api: AppApi) => TemplateResult
 }
 
+// The events of PostWalk, for `notify`; its renderers come from PostWalkTemplate.
 export type PostWalkType = {
+  create: (entity: PostWalkEntity) => void
+  routeChange: (
+    entity: PostWalkEntity,
+    payload: RouteChangePayload,
+    api: AppApi,
+  ) => void
+  locate: (entity: PostWalkEntity, payload: void, api: AppApi) => void
+  submit: (entity: PostWalkEntity, values: WalkValues, api: AppApi) => void
   render: (entity: PostWalkEntity, api: AppApi) => TemplateResult
-}
+} & AsyncEvents<"walkPost", PostWalkEntity, NewWalk, string, AppApi>
 
 export type MyWalksType = {
   render: (entity: MyWalksEntity, api: AppApi) => TemplateResult

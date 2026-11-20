@@ -11,7 +11,31 @@
   },
   "postWalk": {
     "title": "Publier une marche",
-    "empty": "Dites d'où et quand vous partez, et quelqu'un pourrait vous accompagner."
+    "fromPlace": "De",
+    "fromPlaceHint": "Kensington, 10 St NW",
+    "toPlace": "À",
+    "toPlaceHint": "SAIT, Heritage Hall",
+    "departsAt": "Départ à",
+    "meetingPoint": "Point de rencontre",
+    "meetingPointHint": "Un lieu public : seuls les partenaires que vous acceptez le verront.",
+    "notes": "Notes",
+    "notesHint": "Je marche vite, je prends le pont…",
+    "post": "Publier la marche",
+    "posting": "Publication…",
+    "posted": "Marche publiée",
+    "locate": "Utiliser ma position",
+    "locating": "Recherche de votre position…",
+    "locationNeeded": "Nous avons besoin de votre position pour montrer votre marche aux étudiants à proximité.",
+    "locationFailed": "Impossible de trouver votre position.",
+    "locationFound": "Départ là où vous êtes (±{{accuracy}} m). Seul le secteur est enregistré, jamais l'endroit exact.",
+    "errors": {
+      "noLocation": "Partagez d'abord votre position.",
+      "missingPlace": "Indiquez d'où, vers où et le point de rencontre.",
+      "past": "Choisissez une heure à venir.",
+      "tooFar": "Les marches peuvent être publiées jusqu'à une semaine à l'avance.",
+      "network": "Pas de connexion. Vérifiez-la et réessayez.",
+      "unknown": "Une erreur s'est produite. Réessayez."
+    }
   },
   "myWalks": {
     "title": "Mes marches",

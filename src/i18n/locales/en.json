@@ -11,7 +11,31 @@
   },
   "postWalk": {
     "title": "Post a walk",
-    "empty": "Say where and when you leave, and someone may join you."
+    "fromPlace": "From",
+    "fromPlaceHint": "Kensington, 10 St NW",
+    "toPlace": "To",
+    "toPlaceHint": "SAIT, Heritage Hall",
+    "departsAt": "Leaving at",
+    "meetingPoint": "Where to meet",
+    "meetingPointHint": "A public spot: only the buddies you accept will see it.",
+    "notes": "Notes",
+    "notesHint": "I walk fast, I take the bridge…",
+    "post": "Post walk",
+    "posting": "Posting…",
+    "posted": "Walk posted",
+    "locate": "Use my location",
+    "locating": "Finding where you are…",
+    "locationNeeded": "We need your location to show your walk to students nearby.",
+    "locationFailed": "We couldn't find your location.",
+    "locationFound": "Starts where you are (±{{accuracy}} m). Only the area is saved, never the exact spot.",
+    "errors": {
+      "noLocation": "Share your location first.",
+      "missingPlace": "Fill in where from, where to and where to meet.",
+      "past": "Pick a time in the future.",
+      "tooFar": "Walks can be posted up to a week ahead.",
+      "network": "No connection. Check it and try again.",
+      "unknown": "Something went wrong. Try again."
+    }
   },
   "myWalks": {
     "title": "My walks",

@@ -374,3 +374,55 @@ pnpm test                      # the unit tests, no backend needed
 - Types live in `types/walks.d.ts`.
 
 The screens of the next steps only call these functions.
+
+---
+
+## Step 6 — Posting a walk
+
+The Post tab is a form: from, to, when, where to meet, notes. Where the walk **starts** is never typed: it comes from the phone.
+
+```bash
+pnpm dev     # sign in, open Post, allow the location
+```
+
+**Try it**: post a walk leaving in 20 minutes. The app shows a toast and moves to My walks (still empty: step 8). Then open Studio (http://127.0.0.1:55323) → `walks`: the start has three decimals, whatever the phone said.
+
+---
+
+## Step 6 — The phone's location
+
+Location is a **device feature**, wired like any other piece of the app: an entity.
+
+- `src/store/index.ts` registers `createGeolocation({ plugin: Geolocation })`: the browser's location on the web, `@capacitor/geolocation` in the native app.
+- Opening the Post tab sends `#geolocation:geolocationRequest`, so the position is ready before the form is filled in.
+- The screen reads `api.getEntity("geolocation")`: loading, found (with its accuracy), or failed with a "Use my location" button.
+
+The phones need to explain why the app asks. Both texts live in `package.json`, never in the `ios/` and `android/` folders:
+
+```json
+"native": {
+  "ios": { "infoPlist": { "NSLocationWhenInUseUsageDescription": "Walka Walka uses your location…" } },
+  "android": { "permissions": ["android.permission.ACCESS_COARSE_LOCATION", "android.permission.ACCESS_FINE_LOCATION"] }
+}
+```
+
+---
+
+## Step 6 — One screen, four files
+
+`src/views/post-walk/`, following the `web-best-practices` skill:
+
+| File          | Holds                                                                          | Tested by          |
+| ------------- | ------------------------------------------------------------------------------ | ------------------ |
+| `helpers.ts`  | Pure functions: is the walk valid? turn the form into a `NewWalk`              | `helpers.test.ts`  |
+| `handlers.ts` | What happens on each event: tab opened, location asked, form sent, walk posted | `handlers.test.ts` |
+| `template.ts` | The markup, from plain props and `onX` callbacks: no store in sight            |                    |
+| `index.ts`    | Joins them, and turns the store into props in `render`                         |                    |
+
+- The form is read **once, when sent** (`FormData`), not on every keystroke.
+- The rules are checked twice again: `walkProblem` explains in words; the database refuses anyway.
+- `handleRequest("walkPost", …)` gives the entity a `status` (`loading`, `success`, `error`) and an `error`, so the button can say "Posting…".
+
+```bash
+pnpm test     # 13 tests
+```

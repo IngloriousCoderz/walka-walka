@@ -70,6 +70,7 @@
       "captcha": "Nous n'avons pas pu vérifier que vous êtes humain. Réessayez.",
       "network": "Pas de connexion. Vérifiez-la et réessayez.",
       "unknown": "Une erreur s'est produite. Réessayez."
-    }
+    },
+    "outsideSait": "Walka Walka est réservé aux étudiants du SAIT : une autre adresse doit être invitée."
   }
 }

@@ -70,6 +70,7 @@
       "captcha": "We couldn't check you're human. Try again.",
       "network": "No connection. Check it and try again.",
       "unknown": "Something went wrong. Try again."
-    }
+    },
+    "outsideSait": "Walka Walka is for SAIT students: another address needs an invitation."
   }
 }

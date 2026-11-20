@@ -75,6 +75,8 @@ export interface AppNativeUpdateEntity extends NativeUpdateEntity {
 
 export interface AppAuthEntity extends AuthEntity {
   type: "Auth"
+  // An email outside SAIT was typed: it needs an invitation.
+  isOutsideSait?: boolean
 }
 
 export interface AppToastEntity extends ToastEntity {

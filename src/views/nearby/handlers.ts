@@ -85,6 +85,7 @@ export const handlers = {
           message: t("nearby.requested"),
           color: "success",
         })
+        api.notify("#analytics:analyticsTrack", { name: "walk_join_ask" })
       },
       error(entity, error, api) {
         entity.joiningId = null

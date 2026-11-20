@@ -80,6 +80,10 @@ describe("Nearby handlers", () => {
         type: "#toast:show",
         payload: { message: "Request sent", color: "success" },
       },
+      {
+        type: "#analytics:analyticsTrack",
+        payload: { name: "walk_join_ask" },
+      },
     ])
   })
 })

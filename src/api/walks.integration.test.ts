@@ -138,6 +138,25 @@ describe("who may see and do what with a walk", () => {
     ])
   })
 
+  it("tells the poster someone wants to join", async () => {
+    expect(await latestNotification(aiko)).toMatchObject({
+      title: "Marcus wants to walk with you",
+      body: "Kensington → SAIT Heritage Hall",
+      url: "/walks",
+    })
+  })
+
+  it("lets nobody send a notification by hand", async () => {
+    const { data } = await marcus.auth.getUser()
+    const { error } = await priya.from("notifications").insert({
+      user_id: data.user!.id,
+      title: "Fake",
+      body: "Spam",
+    })
+
+    expect(error?.code).toBe(PERMISSION_DENIED)
+  })
+
   it("lets only the poster answer, and only the status change", async () => {
     const { requestId } = (await joinedTestWalk(marcus))!
 
@@ -155,6 +174,12 @@ describe("who may see and do what with a walk", () => {
     expect(error?.code).toBe(PERMISSION_DENIED)
 
     await answerRequest(requestId, "accepted", aiko)
+  })
+
+  it("tells the requester the answer", async () => {
+    expect(await latestNotification(marcus)).toMatchObject({
+      title: "Aiko accepted: you're walking together",
+    })
   })
 
   it("shows where to meet to accepted buddies only", async () => {
@@ -178,6 +203,17 @@ describe("who may see and do what with a walk", () => {
     expect(await joinedTestWalk(marcus)).toBeUndefined()
   })
 })
+
+async function latestNotification(student: ReturnType<typeof client>) {
+  const { data, error } = await student
+    .from("notifications")
+    .select("title, body, url")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .single()
+  if (error) throw error
+  return data
+}
 
 // The seed has walks of its own: look only at the one this test posted.
 async function joinedTestWalk(student: ReturnType<typeof client>) {

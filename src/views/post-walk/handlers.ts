@@ -52,6 +52,7 @@ export const handlers = {
           message: t("postWalk.posted"),
           color: "success",
         })
+        api.notify("#analytics:analyticsTrack", { name: "walk_post" })
         api.notify("#router:navigate", { to: "/walks", replace: true })
       },
     },

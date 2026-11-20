@@ -72,12 +72,16 @@ export const handlers = {
         await answerRequest(answer.requestId, answer.status)
         return answer
       },
-      success(entity, { requestId, status }) {
+      success(entity, { requestId, status }, api) {
         entity.busyId = null
         const request = entity.posted
           .flatMap((walk) => walk.requests)
           .find(({ id }) => id === requestId)
         if (request) request.status = status
+        api.notify("#analytics:analyticsTrack", {
+          name: "walk_request_answer",
+          params: { status },
+        })
       },
       error: failed,
     },

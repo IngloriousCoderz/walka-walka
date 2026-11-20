@@ -19,9 +19,9 @@ import { Auth } from "../app/auth"
 import { NativeUpdate } from "../app/native-update"
 import { PushPrompt } from "../app/push-prompt"
 import { I18n } from "../i18n"
-import { About } from "../views/about"
-import { Home } from "../views/home"
-import { Message } from "../views/home/message"
+import { MyWalks } from "../views/my-walks"
+import { Nearby } from "../views/nearby"
+import { PostWalk } from "../views/post-walk"
 import { entities } from "./entities"
 import { middlewares } from "./middlewares"
 import { routes } from "./routes"
@@ -38,9 +38,9 @@ const LiveUpdateType = createLiveUpdate({
 
 export const store = createStore<AppEntity, AppState, AppEvents>({
   types: {
-    Message,
-    Home,
-    About,
+    Nearby,
+    PostWalk,
+    MyWalks,
     Router,
     I18n,
     Analytics,
@@ -57,7 +57,7 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
   },
   entities,
   middlewares: [withTransitions(), ...middlewares],
-  // Creates an entity for each type that has none: home, about, router, i18n, analytics, pushPrompt, nativeUpdate, liveUpdate, auth, toast, keyboard, systemBars, appLinks, pwaUpdate.
+  // Creates an entity for each type that has none: nearby, postWalk, myWalks, router, i18n, analytics, pushPrompt, nativeUpdate, liveUpdate, auth, toast, keyboard, systemBars, appLinks, pwaUpdate.
   autoCreateEntities: true,
   // Freezes the state in development, so a write outside a handler throws.
   devMode: import.meta.env.DEV,

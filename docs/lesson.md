@@ -278,3 +278,39 @@ pnpm test     # 7 tests
 ```bash
 supabase db reset --yes
 ```
+
+---
+
+## Step 4 — The tabs
+
+The demo screens go; the app's own arrive. One tab per thing a student does:
+
+| Tab      | Path       | Entity     | For                               |
+| -------- | ---------- | ---------- | --------------------------------- |
+| Nearby   | `/`        | `nearby`   | Walks leaving near you soon       |
+| Post     | `/post`    | `postWalk` | Posting your own walk             |
+| My walks | `/walks`   | `myWalks`  | Walks you posted or asked to join |
+| Profile  | `/profile` | `auth`     | Sign out, delete your account     |
+
+For now each screen is only a title and a sentence: the skeleton comes first, so we can click through the whole app before any of it works.
+
+The tabs are one list, `tabs` in `src/app/index.ts`: the tab bar on phones and the drawer on wider screens both read it, so a new screen is one more line.
+
+---
+
+## Step 4 — How a screen is wired
+
+Four places, every time. The agent skills list them, so the AI agent knows them too:
+
+1. **The type** — `src/views/nearby/index.ts`: an object with a `render` method (and, later, event handlers).
+2. **The store** — `src/store/index.ts` registers `Nearby`; `autoCreateEntities` gives it an entity called `nearby`.
+3. **The route** — `src/store/routes.ts` maps `/` to the `nearby` entity.
+4. **The types** — `types/index.d.ts` declares `NearbyEntity` and `NearbyType`, so TypeScript checks every event we send.
+
+Plus the words, in **both** languages: `src/i18n/locales/en.json` and `fr.json`. No text is written in the code: every string is a key from day one.
+
+```bash
+pnpm dev      # sign in as aiko.tanaka@edu.sait.ca / walka-local
+```
+
+**Try it**: switch the language in Profile (chosen once, so not in the app bar), and widen the window until the tab bar becomes a drawer. On Android, the back button on a tab closes the app, as other apps do (`backButton.rootPaths` in `src/store/entities.ts`).

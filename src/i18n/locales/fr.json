@@ -1,19 +1,21 @@
 {
   "nav": {
-    "home": "Accueil",
-    "about": "À propos"
+    "nearby": "À proximité",
+    "post": "Publier",
+    "walks": "Mes marches"
   },
   "language": "Langue",
-  "home": {
-    "title": "Bienvenue",
-    "hint": "Cliquez sur un salut pour le crier."
+  "nearby": {
+    "title": "Marches près de vous",
+    "empty": "Personne ne part près de vous pour l'instant."
   },
-  "about": {
-    "title": "À propos",
-    "body": "Une page à part entière, à sa propre adresse."
+  "postWalk": {
+    "title": "Publier une marche",
+    "empty": "Dites d'où et quand vous partez, et quelqu'un pourrait vous accompagner."
   },
-  "message": {
-    "hello": "Bonjour {{who}}"
+  "myWalks": {
+    "title": "Mes marches",
+    "empty": "Vous n'avez encore publié ni rejoint aucune marche."
   },
   "analytics": {
     "prompt": "Pouvons-nous mesurer comment vous utilisez cette app ? Cela nous aide à l'améliorer.",

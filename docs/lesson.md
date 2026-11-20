@@ -483,3 +483,60 @@ pnpm test:integration     # 11 tests, after a reset
 ```
 
 **Try it**: ask to join a walk, then sign in as Marcus in another browser (or a private window). Chapter 7 gives him a place to answer.
+
+---
+
+## Chapter 7 — My walks
+
+Two lists in one tab:
+
+- **Walks you posted**: where to meet, who asked to join, **Accept** / **Decline**, and **Cancel walk** (it asks first: it can't be undone).
+- **Walks you asked to join**: the answer so far and, once accepted, **where to meet**. **Withdraw** if your plans change.
+
+```bash
+supabase db reset --yes    # applies the realtime migration
+pnpm dev
+```
+
+---
+
+## Chapter 7 — It updates by itself
+
+Open My walks as **Marcus** in one browser and Nearby as **Aiko** in a private window. When Aiko asks to join, Marcus sees the request appear **without refreshing**. When he accepts, Aiko's card shows where to meet.
+
+Two pieces make it work:
+
+1. `supabase/migrations/…_realtime.sql` publishes the changes of `walks` and `walk_requests`. Realtime applies row-level security too: each student only hears about rows they may see.
+2. `src/store/index.ts` decorates the type:
+
+```ts
+MyWalks: [
+  MyWalks,
+  withLiveReload({
+    source: realtimeSource(supabase),
+    tables: ["walks", "walk_requests"],
+    event: "walksLoad",
+    isLive: (entity, api) => /* only while on screen */,
+  }),
+],
+```
+
+The rule: **your own changes show at once** (the handlers patch the entity); **other people's changes arrive by reload**. The decorator doesn't try to work out which rows changed: any change to those tables reloads the list, which is simpler and harder to get wrong.
+
+---
+
+## Chapter 7 — Confirming the irreversible
+
+Cancelling a walk is a two-step event flow, all in the entity:
+
+| Event               | Entity                              | Screen            |
+| ------------------- | ----------------------------------- | ----------------- |
+| `cancelAsk(walkId)` | `cancelingId = walkId`              | the dialog opens  |
+| `cancelDismiss`     | `cancelingId = null`                | the dialog closes |
+| `cancel(walkId)`    | busy, then the walk leaves `posted` | a toast confirms  |
+
+The dialog is `ConfirmDialog` from Inglorious UI: no state of its own, only props.
+
+```bash
+pnpm test     # 23 tests
+```

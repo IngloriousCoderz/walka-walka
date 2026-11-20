@@ -62,7 +62,29 @@
   },
   "myWalks": {
     "title": "My walks",
-    "empty": "You haven't posted or joined any walk yet."
+    "empty": "You haven't posted or joined any walk yet.",
+    "loading": "Loading your walks…",
+    "posted": "Walks you posted",
+    "joined": "Walks you asked to join",
+    "meetAt": "Meet at: {{place}}",
+    "noRequests": "Nobody has asked to join yet.",
+    "cancel": "Cancel walk",
+    "cancelConfirm": "Cancel this walk? Anyone who joined will lose it.",
+    "cancelYes": "Cancel walk",
+    "cancelNo": "Keep it",
+    "canceled": "Walk canceled",
+    "accept": "Accept",
+    "decline": "Decline",
+    "withdraw": "Withdraw",
+    "request": {
+      "pending": "{{name}} asks to join",
+      "accepted": "{{name}} is coming",
+      "declined": "{{name}}: declined"
+    },
+    "errors": {
+      "network": "No connection. Check it and try again.",
+      "unknown": "Something went wrong. Try again."
+    }
   },
   "analytics": {
     "prompt": "May we measure how you use this app? It helps us make it better.",

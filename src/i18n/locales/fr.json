@@ -62,7 +62,29 @@
   },
   "myWalks": {
     "title": "Mes marches",
-    "empty": "Vous n'avez encore publié ni rejoint aucune marche."
+    "empty": "Vous n'avez encore publié ni rejoint aucune marche.",
+    "loading": "Chargement de vos marches…",
+    "posted": "Marches que vous avez publiées",
+    "joined": "Marches que vous voulez rejoindre",
+    "meetAt": "Rendez-vous : {{place}}",
+    "noRequests": "Personne n'a encore demandé à se joindre.",
+    "cancel": "Annuler la marche",
+    "cancelConfirm": "Annuler cette marche ? Les personnes acceptées la perdront.",
+    "cancelYes": "Annuler la marche",
+    "cancelNo": "La garder",
+    "canceled": "Marche annulée",
+    "accept": "Accepter",
+    "decline": "Refuser",
+    "withdraw": "Me retirer",
+    "request": {
+      "pending": "{{name}} demande à se joindre",
+      "accepted": "{{name}} vient",
+      "declined": "{{name}} : refusé"
+    },
+    "errors": {
+      "network": "Pas de connexion. Vérifiez-la et réessayez.",
+      "unknown": "Une erreur s'est produite. Réessayez."
+    }
   },
   "analytics": {
     "prompt": "Pouvons-nous mesurer comment vous utilisez cette app ? Cela nous aide à l'améliorer.",

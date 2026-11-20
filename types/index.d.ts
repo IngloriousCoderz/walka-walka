@@ -50,9 +50,13 @@ import type {
 } from "@inglorious/web/router"
 
 import type {
+  JoinedWalk,
+  MyWalksData,
   NearbyQuery,
   NearbyWalk,
   NewWalk,
+  PostedWalk,
+  RequestAnswer,
   WalkProblem,
   WalkValues,
 } from "./walks"
@@ -79,6 +83,14 @@ export interface PostWalkEntity extends BaseEntity {
 
 export interface MyWalksEntity extends BaseEntity {
   type: "MyWalks"
+  posted: PostedWalk[]
+  joined: JoinedWalk[]
+  status: "idle" | RequestStatus
+  error: string | null
+  actionStatus: "idle" | RequestStatus
+  actionError: string | null
+  busyId: string | null
+  cancelingId: string | null
 }
 
 export interface AppRouterEntity extends RouterEntity {
@@ -238,9 +250,21 @@ export type PostWalkType = {
   render: (entity: PostWalkEntity, api: AppApi) => TemplateResult
 } & AsyncEvents<"walkPost", PostWalkEntity, NewWalk, string, AppApi>
 
+// The events of MyWalks, for `notify`; its renderers come from MyWalksTemplate.
 export type MyWalksType = {
+  create: (entity: MyWalksEntity) => void
+  routeChange: (
+    entity: MyWalksEntity,
+    payload: RouteChangePayload,
+    api: AppApi,
+  ) => void
+  cancelAsk: (entity: MyWalksEntity, walkId: string) => void
+  cancelDismiss: (entity: MyWalksEntity) => void
   render: (entity: MyWalksEntity, api: AppApi) => TemplateResult
-}
+} & AsyncEvents<"walksLoad", MyWalksEntity, void, MyWalksData, AppApi> &
+  AsyncEvents<"answer", MyWalksEntity, RequestAnswer, RequestAnswer, AppApi> &
+  AsyncEvents<"withdraw", MyWalksEntity, string, string, AppApi> &
+  AsyncEvents<"cancel", MyWalksEntity, string, string, AppApi>
 
 // A shorthand for a type: `{ ... } satisfies AppType<NearbyEntity>` infers
 // its handlers' parameters, but neither lists its events nor types payloads.

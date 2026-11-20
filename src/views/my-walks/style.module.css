@@ -1,0 +1,52 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iw-space-md, 1rem);
+  margin-block-end: var(--iw-space-xl, 2rem);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iw-space-md, 1rem);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.route {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.meta {
+  margin: var(--iw-space-xs, 0.25rem) 0 0;
+  opacity: 0.8;
+}
+
+.meeting {
+  margin: var(--iw-space-sm, 0.5rem) 0 0;
+  font-weight: 600;
+}
+
+.requests {
+  display: flex;
+  flex-direction: column;
+  gap: var(--iw-space-sm, 0.5rem);
+  padding: 0;
+  margin: var(--iw-space-md, 1rem) 0 0;
+  list-style: none;
+}
+
+.request {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--iw-space-sm, 0.5rem);
+}
+
+.answers {
+  display: flex;
+  gap: var(--iw-space-sm, 0.5rem);
+}

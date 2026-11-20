@@ -57,7 +57,7 @@
     "@inglorious/ui": "^9.20.3",
     "@inglorious/web": "^6.31.0",
     "@supabase/supabase-js": "^2.118.0",
-    "firebase": "^12.19.0"
+    "firebase": "^13.4.0"
   },
   "devDependencies": {
     "@capacitor/android": "^8.5.3",

@@ -100,3 +100,15 @@ export interface JoinedRow {
     meeting_points: { details: string } | null
   }
 }
+
+// The Post form's fields, as typed: the departure in the input's local time.
+export interface WalkValues {
+  fromPlace: string
+  toPlace: string
+  departsAt: string
+  meetingPoint: string
+  notes: string
+}
+
+// Why a walk can't be posted yet, as a translation key.
+export type WalkProblem = "noLocation" | "missingPlace" | "past" | "tooFar"

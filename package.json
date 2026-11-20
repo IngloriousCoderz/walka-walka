@@ -42,6 +42,7 @@
     "@capacitor-firebase/messaging": "^8.5.2",
     "@capacitor/app": "^8.1.2",
     "@capacitor/core": "^8.5.3",
+    "@capacitor/geolocation": "^8.2.5",
     "@capacitor/haptics": "^8.0.2",
     "@capawesome/capacitor-live-update": "^8.8.1",
     "@fontsource/dm-sans": "^5.3.0",
@@ -59,12 +60,18 @@
     "firebase": "^12.19.0"
   },
   "devDependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/cli": "^8.5.3",
+    "@capacitor/ios": "^8.5.3",
+    "@changesets/cli": "^3.0.3",
+    "@inglorious/capacitor": "^0.5.1",
     "@inglorious/eslint-config": "^1.2.0",
     "@inglorious/vite-plugin-hmr": "^1.1.0",
     "@types/node": "^26.4.1",
     "@typescript-eslint/eslint-plugin": "^8.72.0",
     "@typescript-eslint/parser": "^8.72.0",
     "@typescript/native": "npm:typescript@^7.0.2",
+    "@vite-pwa/assets-generator": "^2.0.0",
     "eslint": "^10.13.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.10",
@@ -74,15 +81,9 @@
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vite": "^8.3.4",
     "vite-plugin-image-optimizer": "^2.0.3",
-    "@changesets/cli": "^3.0.3",
     "vite-plugin-pwa": "^2.0.0",
-    "@vite-pwa/assets-generator": "^2.0.0",
-    "workbox-window": "^7.4.1",
-    "@capacitor/android": "^8.5.3",
-    "@capacitor/cli": "^8.5.3",
-    "@capacitor/ios": "^8.5.3",
-    "@inglorious/capacitor": "^0.5.1",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.0",
+    "workbox-window": "^7.4.1"
   },
   "packageManager": "pnpm@12.15.0",
   "engines": {
@@ -98,13 +99,17 @@
     "ios": {
       "teamId": "",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSLocationWhenInUseUsageDescription": "Walka Walka uses your location to find walks starting near you, and to know where yours starts."
       },
       "swipeBack": true
     },
     "android": {
       "sha256": [],
-      "permissions": []
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "assets": {
       "background": "#ffffff",

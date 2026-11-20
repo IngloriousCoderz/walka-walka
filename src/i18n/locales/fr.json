@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos"
+  },
+  "language": "Langue",
+  "home": {
+    "title": "Bienvenue",
+    "hint": "Cliquez sur un salut pour le crier."
+  },
+  "about": {
+    "title": "À propos",
+    "body": "Une page à part entière, à sa propre adresse."
+  },
+  "message": {
+    "hello": "Bonjour {{who}}"
+  },
+  "analytics": {
+    "prompt": "Pouvons-nous mesurer comment vous utilisez cette app ? Cela nous aide à l'améliorer.",
+    "accept": "Autoriser",
+    "decline": "Non merci"
+  },
+  "push": {
+    "prompt": "Activer les notifications push ?",
+    "ask": "Me prévenir",
+    "decline": "Plus tard"
+  },
+  "nativeUpdate": {
+    "title": "Mise à jour nécessaire",
+    "body": "Cette version de l'app n'est plus prise en charge. Mettez-la à jour pour continuer.",
+    "bodyNoLink": "Cette version de l'app n'est plus prise en charge. Mettez-la à jour depuis votre store pour continuer.",
+    "update": "Mettre à jour"
+  },
+  "auth": {
+    "profile": "Profil",
+    "signedInAs": "Connecté en tant que {{email}}",
+    "title": "Se connecter",
+    "email": "E-mail",
+    "continue": "Continuer",
+    "change": "Changer d'e-mail",
+    "password": "Mot de passe",
+    "signIn": "Se connecter",
+    "forgot": "Mot de passe oublié ?",
+    "signUpOffer": "Nouveau ? Créer un compte",
+    "signInOffer": "Déjà un compte ? Se connecter",
+    "codeOffer": "M'envoyer un code par e-mail",
+    "signUpTitle": "Créer votre compte",
+    "newPassword": "Choisissez un mot de passe",
+    "passwordHint": "Au moins 8 caractères",
+    "signUp": "Créer le compte",
+    "codeTitle": "Vérifiez vos e-mails",
+    "codeSent": "Nous avons envoyé un code à {{email}}.",
+    "code": "Code",
+    "resend": "Le renvoyer",
+    "resent": "Renvoyé",
+    "resetTitle": "Choisissez un nouveau mot de passe",
+    "reset": "Enregistrer et se connecter",
+    "signOut": "Se déconnecter",
+    "erase": "Supprimer le compte",
+    "eraseConfirm": "Supprimer votre compte et tout son contenu ? C'est irréversible.",
+    "eraseYes": "Supprimer",
+    "cancel": "Annuler",
+    "errors": {
+      "invalidEmail": "Ce n'est pas une adresse e-mail valide.",
+      "invalidCode": "Ce code est erroné ou a expiré.",
+      "weakPassword": "Utilisez au moins 8 caractères.",
+      "invalidCredentials": "E-mail ou mot de passe incorrect.",
+      "accountExists": "Un compte existe déjà avec cet e-mail.",
+      "rateLimited": "Trop de tentatives. Réessayez dans quelques minutes.",
+      "captcha": "Nous n'avons pas pu vérifier que vous êtes humain. Réessayez.",
+      "network": "Pas de connexion. Vérifiez-la et réessayez.",
+      "unknown": "Une erreur s'est produite. Réessayez."
+    }
+  }
+}

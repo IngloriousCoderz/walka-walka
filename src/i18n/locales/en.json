@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About"
+  },
+  "language": "Language",
+  "home": {
+    "title": "Welcome",
+    "hint": "Click a greeting to shout it."
+  },
+  "about": {
+    "title": "About",
+    "body": "A page of its own, at its own address."
+  },
+  "message": {
+    "hello": "Hello {{who}}"
+  },
+  "analytics": {
+    "prompt": "May we measure how you use this app? It helps us make it better.",
+    "accept": "Allow",
+    "decline": "No thanks"
+  },
+  "push": {
+    "prompt": "Turn on push notifications?",
+    "ask": "Notify me",
+    "decline": "Not now"
+  },
+  "nativeUpdate": {
+    "title": "Time to update",
+    "body": "This version of the app is no longer supported. Update it to keep going.",
+    "bodyNoLink": "This version of the app is no longer supported. Update it from your app store to keep going.",
+    "update": "Update"
+  },
+  "auth": {
+    "profile": "Profile",
+    "signedInAs": "Signed in as {{email}}",
+    "title": "Sign in",
+    "email": "Email",
+    "continue": "Continue",
+    "change": "Change email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "forgot": "Forgot your password?",
+    "signUpOffer": "New here? Create an account",
+    "signInOffer": "Already have an account? Sign in",
+    "codeOffer": "Email me a code instead",
+    "signUpTitle": "Create your account",
+    "newPassword": "Choose a password",
+    "passwordHint": "At least 8 characters",
+    "signUp": "Create account",
+    "codeTitle": "Check your email",
+    "codeSent": "We sent a code to {{email}}.",
+    "code": "Code",
+    "resend": "Send it again",
+    "resent": "Sent again",
+    "resetTitle": "Choose a new password",
+    "reset": "Save and sign in",
+    "signOut": "Sign out",
+    "erase": "Delete account",
+    "eraseConfirm": "Delete your account and everything in it? This can't be undone.",
+    "eraseYes": "Delete",
+    "cancel": "Cancel",
+    "errors": {
+      "invalidEmail": "That doesn't look like an email address.",
+      "invalidCode": "That code is wrong or has expired.",
+      "weakPassword": "Use at least 8 characters.",
+      "invalidCredentials": "Wrong email or password.",
+      "accountExists": "There's already an account with this email.",
+      "rateLimited": "Too many attempts. Try again in a few minutes.",
+      "captcha": "We couldn't check you're human. Try again.",
+      "network": "No connection. Check it and try again.",
+      "unknown": "Something went wrong. Try again."
+    }
+  }
+}

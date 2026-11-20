@@ -1,0 +1,7 @@
+# Inglorious packages are used the day they are published.
+minimumReleaseAgeExclude:
+  - "@inglorious/*"
+
+allowBuilds:
+  "@firebase/util": true
+  protobufjs: true

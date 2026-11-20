@@ -1,0 +1,104 @@
+/*
+ * SAIT's look, from www.sait.ca: its Bootstrap colours, Titillium Web for
+ * headings, DM Sans for text and pill-shaped buttons. It sits on top of
+ * Inglorious UI's Bootstrap theme (body class "iw-theme-bootstrap
+ * iw-theme-sait"), which keeps the components' shapes and spacing: this file
+ * only changes tokens.
+ *
+ * Every text-on-fill pair (-text on the fill) and every -emphasis colour on
+ * white reaches WCAG AA (4.5:1). SAIT's green, blue and amber fills are too
+ * light for white text, so they carry dark text, and their -emphasis is a
+ * darker shade.
+ */
+.iw-theme-bootstrap.iw-theme-sait {
+  --iw-font-family-sans: "DM Sans", "Open Sans", Arial, sans-serif;
+  --sait-font-heading: "Titillium Web", "Open Sans", Arial, sans-serif;
+
+  --sait-red: #a6192e;
+  --sait-purple: #6d2077;
+  --sait-slate: #324053;
+  --sait-link: #005eb8;
+  --sait-light: #f7f7f8;
+
+  --iw-color-bg: var(--iw-color-white);
+  --iw-color-bg-secondary: var(--sait-light);
+  --iw-color-text: var(--sait-slate);
+  --iw-color-text-secondary: color-mix(in srgb, var(--sait-slate) 80%, white);
+  --iw-color-text-muted: color-mix(in srgb, var(--sait-slate) 80%, white);
+  --iw-color-border: #d9dadc;
+  --iw-color-border-focus: color-mix(in srgb, var(--sait-red) 45%, white);
+
+  --iw-color-primary: var(--sait-red);
+  --iw-color-primary-hover: #8d1527;
+  --iw-color-primary-active: #851425;
+  --iw-color-primary-text: var(--iw-color-white);
+  --iw-color-primary-emphasis: var(--sait-red);
+
+  --iw-color-secondary: var(--sait-purple);
+  --iw-color-secondary-hover: #5b1b63;
+  --iw-color-secondary-active: #511858;
+  --iw-color-secondary-text: var(--iw-color-white);
+  --iw-color-secondary-emphasis: var(--sait-purple);
+
+  --iw-color-success: #40a33c;
+  --iw-color-success-hover: #389034;
+  --iw-color-success-active: #317f2e;
+  --iw-color-success-text: var(--iw-color-black);
+  --iw-color-success-emphasis: #2f7d2c;
+
+  --iw-color-info: #00a3e0;
+  --iw-color-info-hover: #0090c6;
+  --iw-color-info-active: #007fae;
+  --iw-color-info-text: var(--iw-color-black);
+  --iw-color-info-emphasis: #00739f;
+
+  --iw-color-warning: #ffb016;
+  --iw-color-warning-hover: #f0a000;
+  --iw-color-warning-active: #db9200;
+  --iw-color-warning-text: var(--iw-color-black);
+  --iw-color-warning-emphasis: #7b5b02;
+
+  --iw-color-error: #da291c;
+  --iw-color-error-hover: #b92318;
+  --iw-color-error-active: #ae2116;
+  --iw-color-error-text: var(--iw-color-white);
+  --iw-color-error-emphasis: #da291c;
+
+  /* SAIT's buttons are pills. */
+  --iw-button-radius: var(--iw-radius-full);
+  --iw-input-shadow-focus: 0 0 0 0.25rem
+    color-mix(in srgb, var(--sait-red) 25%, transparent);
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--sait-font-heading);
+    font-weight: 700;
+    color: var(--sait-slate);
+  }
+
+  .iw-app-bar-title {
+    font-family: var(--sait-font-heading);
+    font-weight: 700;
+    font-size: 1.25rem;
+  }
+
+  /* Buttons don't inherit the page's font in browsers. */
+  .iw-bottom-navigation-action {
+    font-family: inherit;
+  }
+
+  a:not(.iw-button) {
+    color: var(--sait-link);
+  }
+
+  .iw-button {
+    font-weight: 600;
+
+    &.iw-button-sm,
+    &.iw-button-lg,
+    &.iw-button-xs {
+      border-radius: var(--iw-radius-full);
+    }
+  }
+}

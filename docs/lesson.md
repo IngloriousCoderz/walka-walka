@@ -613,3 +613,74 @@ api.notify("#analytics:analyticsTrack", { name: "walk_post" })
 ```
 
 Watch them arrive in the Firebase console → Analytics → **Realtime**. Before the stores, the privacy policy must say that Google measures usage, and only with consent.
+
+---
+
+## Step 10 — On a phone
+
+The same code runs as an Android and iOS app. Once per computer, create the native projects (they start with the logo as icon and splash screen):
+
+```bash
+pnpm mobile:init:android     # needs Android Studio
+pnpm mobile:init:ios         # needs Xcode, on a Mac
+```
+
+Then run the app on a phone or emulator, **live-reloading** from this computer as you save:
+
+```bash
+pnpm mobile:dev:android      # or pnpm mobile:dev:ios
+```
+
+- The phone must be on the **same Wi-Fi** as the computer. Campus networks often block devices from talking to each other: a phone hotspot works.
+- On the phone, `127.0.0.1` would be the phone itself. The scaffold's `src/api/supabase.ts` goes through `backendUrl` from `@inglorious/supabase`: it notices the app came from the computer's dev server and reaches the local Supabase at the computer's address instead. A hosted backend is never touched.
+- The first time, the phone asks for its location with the text from `package.json` → `native`.
+
+---
+
+## What's next
+
+What the app still needs before the stores, each a good exercise:
+
+| Next step                            | Why                                                                                                                        |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| **A map** of the start and the route | The "Should" story. Inglorious has no map yet: a `Map` type over **MapLibre GL** is a contribution to the framework itself |
+| **Block and report**                 | Apple and Google require it for apps where strangers meet                                                                  |
+| **Pushes in the student's language** | The triggers write English; store each student's language with their profile                                               |
+| **"I've arrived" check-in**          | If you don't check in, your buddy gets a nudge                                                                             |
+| **Deploy**                           | A hosted Supabase project and Vercel: see the README's "Deploying" steps                                                   |
+| **Store release**                    | `pnpm mobile:release`, store listing images with `pnpm mobile:listing-assets`                                              |
+
+---
+
+## Cheat sheet — from a fresh clone
+
+With Node 26, pnpm, the Supabase CLI and Docker (running):
+
+```bash
+git clone https://github.com/IngloriousCoderz/walka-walka-ref.git walka-walka
+cd walka-walka
+pnpm install
+supabase start                     # prints the publishable key
+cp .env.example .env.local         # then fill in the two values below
+```
+
+```ini
+VITE_SUPABASE_URL=http://127.0.0.1:55321
+VITE_SUPABASE_ANON_KEY=<PUBLISHABLE_KEY>
+```
+
+```bash
+pnpm dev                           # http://localhost:5173
+```
+
+|                          |                                                                                                            |
+| ------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| Sign in                  | `aiko.tanaka@edu.sait.ca`, `marcus.brown@edu.sait.ca`, `priya.sharma@edu.sait.ca` — password `walka-local` |
+| Your own address         | Invite it in `supabase/seed.local.sql` (step 3), then `supabase db reset --yes`                            |
+| Emails (codes)           | Mailpit, http://127.0.0.1:55324                                                                            |
+| Database                 | Studio, http://127.0.0.1:55323                                                                             |
+| Fresh demo walks         | `supabase db reset --yes`                                                                                  |
+| Location outside Calgary | Chrome DevTools → Sensors → `51.0618`, `-114.0892`                                                         |
+| Tests                    | `pnpm test`, and `pnpm test:integration` with the stack running                                            |
+| Pushes                   | Step 9                                                                                                     |
+| Phone                    | Step 10                                                                                                    |

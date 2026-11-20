@@ -88,7 +88,10 @@ describe("who may see and do what with a walk", () => {
     expect(found?.distanceM).toBeLessThan(200)
     expect(found).not.toHaveProperty("meetingPoint")
 
-    const { data } = await marcus.from("meeting_points").select("details")
+    const { data } = await marcus
+      .from("meeting_points")
+      .select("details")
+      .eq("walk_id", walkId)
     expect(data).toEqual([])
   })
 
@@ -112,7 +115,7 @@ describe("who may see and do what with a walk", () => {
     expect(error?.code).toBe(PERMISSION_DENIED)
 
     await askToJoin(walkId, marcus)
-    const [joined] = await joinedWalks(marcus)
+    const joined = await joinedTestWalk(marcus)
 
     expect(joined).toMatchObject({
       walkId,
@@ -129,14 +132,14 @@ describe("who may see and do what with a walk", () => {
       .eq("walk_id", walkId)
     expect(data).toEqual([])
 
-    const [posted] = await postedWalks(aiko)
-    expect(posted.requests).toEqual([
+    const posted = (await postedWalks(aiko)).find(({ id }) => id === walkId)
+    expect(posted?.requests).toEqual([
       { id: expect.any(String), status: "pending", name: "Marcus" },
     ])
   })
 
   it("lets only the poster answer, and only the status change", async () => {
-    const [{ requestId }] = await joinedWalks(marcus)
+    const { requestId } = (await joinedTestWalk(marcus))!
 
     await expect(answerRequest(requestId, "accepted", marcus)).rejects.toThrow(
       "Request not found",
@@ -155,23 +158,32 @@ describe("who may see and do what with a walk", () => {
   })
 
   it("shows where to meet to accepted buddies only", async () => {
-    const [joined] = await joinedWalks(marcus)
+    const joined = await joinedTestWalk(marcus)
     expect(joined).toMatchObject({
       status: "accepted",
       meetingPoint: "Corner of 10 St and 5 Ave NW",
     })
 
-    const { data } = await priya.from("meeting_points").select("details")
+    const { data } = await priya
+      .from("meeting_points")
+      .select("details")
+      .eq("walk_id", walkId)
     expect(data).toEqual([])
   })
 
   it("lets a requester withdraw", async () => {
-    const [{ requestId }] = await joinedWalks(marcus)
+    const { requestId } = (await joinedTestWalk(marcus))!
     await withdrawRequest(requestId, marcus)
 
-    expect(await joinedWalks(marcus)).toEqual([])
+    expect(await joinedTestWalk(marcus)).toBeUndefined()
   })
 })
+
+// The seed has walks of its own: look only at the one this test posted.
+async function joinedTestWalk(student: ReturnType<typeof client>) {
+  const joined = await joinedWalks(student)
+  return joined.find((candidate) => candidate.walkId === walkId)
+}
 
 function client() {
   return createClient(

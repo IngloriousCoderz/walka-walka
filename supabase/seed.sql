@@ -67,3 +67,31 @@ begin
   end loop;
 end;
 $$;
+
+-- Walks around SAIT for the demo, leaving soon after the reset: run
+-- `supabase db reset --yes` again for fresh ones. Marcus and Priya post them,
+-- so Aiko has someone to join.
+do $$
+declare
+  v_marcus uuid := (select id from auth.users where email = 'marcus.brown@edu.sait.ca');
+  v_priya uuid := (select id from auth.users where email = 'priya.sharma@edu.sait.ca');
+  v_walk record;
+  v_walk_id uuid;
+begin
+  for v_walk in
+    select * from (values
+      (v_marcus, 'Kensington, 10 St NW', 'SAIT Heritage Hall', 15, 51.053, -114.088, 'Outside the Plaza Theatre', 'I walk fast, but I''ll wait for you.'),
+      (v_priya, 'Sunnyside C-Train station', 'SAIT Stan Grad Centre', 35, 51.060, -114.081, 'Station exit on 2 Ave NW', ''),
+      (v_marcus, 'SAIT Heritage Hall', 'Lions Park C-Train station', 50, 51.064, -114.090, 'Main doors of Heritage Hall', 'Late lab, glad of company.'),
+      (v_priya, 'Hillhurst, 14 St NW', 'SAIT Senator Burns', 180, 51.058, -114.096, 'Corner of 14 St and 5 Ave NW', '')
+    ) as walks (user_id, from_place, to_place, in_minutes, lat, lng, meeting_point, notes)
+  loop
+    insert into public.walks (user_id, from_place, to_place, departs_at, start_lat, start_lng, notes)
+    values (v_walk.user_id, v_walk.from_place, v_walk.to_place, now() + make_interval(mins => v_walk.in_minutes), v_walk.lat, v_walk.lng, v_walk.notes)
+    returning id into v_walk_id;
+
+    insert into public.meeting_points (walk_id, details)
+    values (v_walk_id, v_walk.meeting_point);
+  end loop;
+end;
+$$;

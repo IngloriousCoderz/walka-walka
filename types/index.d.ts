@@ -14,6 +14,7 @@ import type { AnalyticsEntity, AnalyticsType } from "@inglorious/web/analytics"
 import type { AuthEntity, AuthType } from "@inglorious/web/auth"
 import type {
   GeolocationEntity,
+  GeolocationPosition,
   GeolocationType,
 } from "@inglorious/web/device/geolocation"
 import type {
@@ -48,11 +49,24 @@ import type {
   RouterType,
 } from "@inglorious/web/router"
 
-import type { NewWalk, WalkProblem, WalkValues } from "./walks"
+import type {
+  NearbyQuery,
+  NearbyWalk,
+  NewWalk,
+  WalkProblem,
+  WalkValues,
+} from "./walks"
 
 // The tabs: walks starting near you, the form to post one, and your own.
 export interface NearbyEntity extends BaseEntity {
   type: "Nearby"
+  walks: NearbyWalk[]
+  status: "idle" | RequestStatus
+  error: string | null
+  joinStatus: "idle" | RequestStatus
+  joinError: string | null
+  // The walk being asked to join, so its button waits.
+  joiningId: string | null
 }
 
 export interface PostWalkEntity extends BaseEntity {
@@ -192,9 +206,24 @@ export type AppApi = Api<AppEntity, AppState, AppEvents>
 
 // Each type's events and their payloads. Declare types with `type`, not
 // `interface`: an interface does not fit the store's `types`.
+// The events of Nearby, for `notify`; its renderers come from NearbyTemplate.
 export type NearbyType = {
+  create: (entity: NearbyEntity) => void
+  routeChange: (
+    entity: NearbyEntity,
+    payload: RouteChangePayload,
+    api: AppApi,
+  ) => void
+  refresh: (entity: NearbyEntity, payload: void, api: AppApi) => void
+  // Broadcast by the Geolocation type whenever a new position arrives.
+  positionChange: (
+    entity: NearbyEntity,
+    position: GeolocationPosition | null,
+    api: AppApi,
+  ) => void
   render: (entity: NearbyEntity, api: AppApi) => TemplateResult
-}
+} & AsyncEvents<"walksLoad", NearbyEntity, NearbyQuery, NearbyWalk[], AppApi> &
+  AsyncEvents<"join", NearbyEntity, string, string, AppApi>
 
 // The events of PostWalk, for `notify`; its renderers come from PostWalkTemplate.
 export type PostWalkType = {

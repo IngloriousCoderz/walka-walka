@@ -1,12 +1,10 @@
 import { App as NativeApp } from "@capacitor/app"
 import { SystemBars } from "@capacitor/core"
-import { Geolocation } from "@capacitor/geolocation"
 import { LiveUpdate } from "@capawesome/capacitor-live-update"
 import { createStore } from "@inglorious/store"
 import { liveUpdateManifestUrl } from "@inglorious/supabase"
 import { Toast } from "@inglorious/ui/toast"
 import { withTransitions } from "@inglorious/ui/view-transitions"
-import { createGeolocation } from "@inglorious/web/device/geolocation"
 import { Keyboard } from "@inglorious/web/device/keyboard"
 import { createAppLinks } from "@inglorious/web/native/app-links"
 import { createBackButton } from "@inglorious/web/native/back-button"
@@ -18,6 +16,7 @@ import { Router, setRoutes } from "@inglorious/web/router"
 import type { AppEntity, AppEvents, AppState } from "../../types"
 import { Analytics } from "../app/analytics"
 import { Auth } from "../app/auth"
+import { Geolocation } from "../app/geolocation"
 import { NativeUpdate } from "../app/native-update"
 import { PushPrompt } from "../app/push-prompt"
 import { I18n } from "../i18n"
@@ -49,7 +48,7 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
     PushPrompt,
     NativeUpdate,
     Auth,
-    Geolocation: createGeolocation({ plugin: Geolocation }),
+    Geolocation,
     Toast,
     Keyboard,
     SystemBars: createSystemBars({ plugin: SystemBars }),

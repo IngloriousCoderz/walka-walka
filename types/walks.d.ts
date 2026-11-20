@@ -112,3 +112,14 @@ export interface WalkValues {
 
 // Why a walk can't be posted yet, as a translation key.
 export type WalkProblem = "noLocation" | "missingPlace" | "past" | "tooFar"
+
+// Everything My walks shows, loaded together.
+export interface MyWalksData {
+  posted: PostedWalk[]
+  joined: JoinedWalk[]
+}
+
+export interface RequestAnswer {
+  requestId: string
+  status: "accepted" | "declined"
+}

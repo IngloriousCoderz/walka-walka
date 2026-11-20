@@ -2,9 +2,10 @@ import { App as NativeApp } from "@capacitor/app"
 import { SystemBars } from "@capacitor/core"
 import { LiveUpdate } from "@capawesome/capacitor-live-update"
 import { createStore } from "@inglorious/store"
-import { liveUpdateManifestUrl } from "@inglorious/supabase"
+import { liveUpdateManifestUrl, realtimeSource } from "@inglorious/supabase"
 import { Toast } from "@inglorious/ui/toast"
 import { withTransitions } from "@inglorious/ui/view-transitions"
+import { withLiveReload } from "@inglorious/web/decorators/with-live-reload"
 import { Keyboard } from "@inglorious/web/device/keyboard"
 import { createAppLinks } from "@inglorious/web/native/app-links"
 import { createBackButton } from "@inglorious/web/native/back-button"
@@ -13,7 +14,14 @@ import { createSystemBars } from "@inglorious/web/native/system-bars"
 import { createPwaUpdate } from "@inglorious/web/pwa"
 import { Router, setRoutes } from "@inglorious/web/router"
 
-import type { AppEntity, AppEvents, AppState } from "../../types"
+import type {
+  AppApi,
+  AppEntity,
+  AppEvents,
+  AppState,
+  MyWalksEntity,
+} from "../../types"
+import { supabase } from "../api/supabase"
 import { Analytics } from "../app/analytics"
 import { Auth } from "../app/auth"
 import { Geolocation } from "../app/geolocation"
@@ -29,6 +37,9 @@ import { routes } from "./routes"
 
 setRoutes(routes)
 
+// Changes others make, as they happen: someone asks to join, or answers.
+const live = realtimeSource(supabase)
+
 // Only release builds are stamped: a development build must not update itself.
 const LiveUpdateType = createLiveUpdate({
   plugin: LiveUpdate,
@@ -41,7 +52,16 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
   types: {
     Nearby,
     PostWalk,
-    MyWalks,
+    MyWalks: [
+      MyWalks,
+      withLiveReload<MyWalksEntity, AppApi>({
+        source: live,
+        tables: ["walks", "walk_requests"],
+        event: "walksLoad",
+        // Only while on screen.
+        isLive: (entity, api) => api.getEntity("router")!.route === entity.id,
+      }),
+    ],
     Router,
     I18n,
     Analytics,

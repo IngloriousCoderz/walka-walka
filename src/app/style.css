@@ -46,12 +46,6 @@ main {
   }
 }
 
-.app-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
 @media (max-width: 47.99rem) {
   body {
     --iw-snackbar-offset-bottom: 5rem;

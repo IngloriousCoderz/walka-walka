@@ -39,18 +39,17 @@ import type { PushPromptEntity, PushPromptType } from "@inglorious/web/push"
 import type { PwaUpdateEntity, PwaUpdateType } from "@inglorious/web/pwa"
 import type { RouterEntity, RouterType } from "@inglorious/web/router"
 
-export interface MessageEntity extends BaseEntity {
-  type: "Message"
-  who: string
-  isUpperCase?: boolean
+// The tabs: walks starting near you, the form to post one, and your own.
+export interface NearbyEntity extends BaseEntity {
+  type: "Nearby"
 }
 
-export interface HomeEntity extends BaseEntity {
-  type: "Home"
+export interface PostWalkEntity extends BaseEntity {
+  type: "PostWalk"
 }
 
-export interface AboutEntity extends BaseEntity {
-  type: "About"
+export interface MyWalksEntity extends BaseEntity {
+  type: "MyWalks"
 }
 
 export interface AppRouterEntity extends RouterEntity {
@@ -109,9 +108,9 @@ export interface AppLiveUpdateEntity extends LiveUpdateEntity {
 
 // Union type of all entities
 export type AppEntity =
-  | MessageEntity
-  | HomeEntity
-  | AboutEntity
+  | NearbyEntity
+  | PostWalkEntity
+  | MyWalksEntity
   | AppRouterEntity
   | AppI18nEntity
   | AppAnalyticsEntity
@@ -130,11 +129,9 @@ export type AppEntity =
 export interface AppState extends EntitiesState<AppEntity> {
   i18n: AppI18nEntity
   router: AppRouterEntity
-  home: HomeEntity
-  message1: MessageEntity
-  message2: MessageEntity
-  message3: MessageEntity
-  about: AboutEntity
+  nearby: NearbyEntity
+  postWalk: PostWalkEntity
+  myWalks: MyWalksEntity
   analytics: AppAnalyticsEntity
   pushPrompt: AppPushPromptEntity
   nativeUpdate: AppNativeUpdateEntity
@@ -150,8 +147,9 @@ export interface AppState extends EntitiesState<AppEntity> {
 
 // The events the app's types answer, so that `notify` checks them.
 export type AppEvents = EventsOf<
-  | MessageType
-  | HomeType
+  | NearbyType
+  | PostWalkType
+  | MyWalksType
   | RouterType
   | I18nType
   | AnalyticsType
@@ -171,15 +169,18 @@ export type AppApi = Api<AppEntity, AppState, AppEvents>
 
 // Each type's events and their payloads. Declare types with `type`, not
 // `interface`: an interface does not fit the store's `types`.
-export type MessageType = {
-  click: (entity: MessageEntity) => void
-  render: (entity: MessageEntity, api: AppApi) => TemplateResult
+export type NearbyType = {
+  render: (entity: NearbyEntity, api: AppApi) => TemplateResult
 }
 
-export type HomeType = {
-  render: (entity: HomeEntity, api: AppApi) => TemplateResult
+export type PostWalkType = {
+  render: (entity: PostWalkEntity, api: AppApi) => TemplateResult
 }
 
-// A shorthand for a type: `{ ... } satisfies AppType<MessageEntity>` infers
+export type MyWalksType = {
+  render: (entity: MyWalksEntity, api: AppApi) => TemplateResult
+}
+
+// A shorthand for a type: `{ ... } satisfies AppType<NearbyEntity>` infers
 // its handlers' parameters, but neither lists its events nor types payloads.
 export type AppType<TEntity extends AppEntity> = EntityType<TEntity, AppApi>

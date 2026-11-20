@@ -2,6 +2,7 @@ import { Alert } from "@inglorious/ui/alert"
 import { Button } from "@inglorious/ui/button"
 import { ConfirmDialog } from "@inglorious/ui/confirm-dialog"
 import { Input } from "@inglorious/ui/input"
+import { Select } from "@inglorious/ui/select"
 import type { TemplateResult } from "@inglorious/web"
 import { html, nothing } from "@inglorious/web"
 import { createAuth } from "@inglorious/web/auth"
@@ -245,6 +246,7 @@ function account(entity: AppAuthEntity, api: AppApi) {
   return html`<section class="app-profile">
     <h1>${t("auth.profile")}</h1>
     <p>${t("auth.signedInAs", { email: entity.user?.email })}</p>
+    ${language(api)}
     ${Button.render({
       variant: "outline",
       onClick: () => api.notify(`#${entity.id}:signOut`),
@@ -268,6 +270,17 @@ function account(entity: AppAuthEntity, api: AppApi) {
       children: errorMessage(entity),
     })}
   </section>`
+}
+
+// Chosen once, so it lives here rather than in the app bar.
+function language(api: AppApi) {
+  const i18n = api.getEntity("i18n")!
+  return Select.render({
+    label: t("language"),
+    value: i18n.locale,
+    options: i18n.languages,
+    onChange: (locale) => api.notify("#i18n:localeChange", locale),
+  })
 }
 
 function errorMessage(entity: AppAuthEntity) {

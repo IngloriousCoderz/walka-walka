@@ -1,19 +1,21 @@
 {
   "nav": {
-    "home": "Home",
-    "about": "About"
+    "nearby": "Nearby",
+    "post": "Post",
+    "walks": "My walks"
   },
   "language": "Language",
-  "home": {
-    "title": "Welcome",
-    "hint": "Click a greeting to shout it."
+  "nearby": {
+    "title": "Walks near you",
+    "empty": "Nobody is leaving near you right now."
   },
-  "about": {
-    "title": "About",
-    "body": "A page of its own, at its own address."
+  "postWalk": {
+    "title": "Post a walk",
+    "empty": "Say where and when you leave, and someone may join you."
   },
-  "message": {
-    "hello": "Hello {{who}}"
+  "myWalks": {
+    "title": "My walks",
+    "empty": "You haven't posted or joined any walk yet."
   },
   "analytics": {
     "prompt": "May we measure how you use this app? It helps us make it better.",

@@ -116,3 +116,68 @@ pnpm test     # the first test already passes
 pnpm dlx skills add https://inglorious.dev --skill forge forge-best-practices \
   app-recipe store web web-best-practices ui ui-best-practices i18n firebase supabase
 ```
+
+---
+
+## Chapter 1 — A SAIT look
+
+Before building anything, the app should feel like SAIT: students will look at it for the whole lesson. Bootstrap, picked in chapter 0, is a sensible start, but it looks like a thousand other sites. So we borrow SAIT's own style, from **www.sait.ca**.
+
+How to read a website's design: open DevTools on its home page and look at the stylesheets. SAIT's site is built on **Bootstrap**, so its brand lives in a handful of CSS variables:
+
+|           | SAIT                               | In the app                            |
+| --------- | ---------------------------------- | ------------------------------------- |
+| Primary   | `#a6192e`, the SAIT red            | Buttons, the header, the selected tab |
+| Secondary | `#6d2077`, purple                  |                                       |
+| Text      | `#324053`, a slate blue, not black | Body text and headings                |
+| Links     | `#005eb8`                          |                                       |
+| Headings  | Titillium Web                      | `h1`–`h3`, the app's title            |
+| Text      | DM Sans                            | Everything else                       |
+| Buttons   | Pills (`border-radius: 2em`)       | Every button                          |
+
+---
+
+## Chapter 1 — A theme on top of a theme
+
+Inglorious UI already has a Bootstrap theme: it gives the components their shapes, spacing and focus rings. We keep it, and add a thin layer of our own on top that only changes **tokens**:
+
+```html
+<body class="iw-theme-bootstrap iw-theme-sait"></body>
+```
+
+```css
+/* src/styles/theme.css */
+.iw-theme-bootstrap.iw-theme-sait {
+  --iw-color-primary: #a6192e;
+  --iw-color-primary-text: white;
+  --iw-button-radius: var(--iw-radius-full);
+  …
+}
+```
+
+Every component reads tokens such as `--iw-color-primary` instead of fixed colours, so changing a token restyles every button, tab and header at once. The header turns SAIT red with one prop: `AppBar.render({ color: "primary", … })`.
+
+---
+
+## Chapter 1 — Accessible colours
+
+Brand colours aren't automatically readable. The rule: **text on a colour needs a contrast of at least 4.5:1** (WCAG AA).
+
+| Colour             | White text | Black text | So the app uses                                    |
+| ------------------ | ---------- | ---------- | -------------------------------------------------- |
+| SAIT red `#a6192e` | 7.5 ✓      | 2.8        | white                                              |
+| Green `#40a33c`    | 3.2 ✗      | 6.5 ✓      | black, and a darker green `#2f7d2c` for green text |
+| Blue `#00a3e0`     | 2.9 ✗      | 7.3 ✓      | black, and `#00739f` for blue text                 |
+| Amber `#ffb016`    | 1.8 ✗      | 11.5 ✓     | black                                              |
+
+**Design class**: pick a brand colour, check it with any contrast checker, and find the darkest shade that still feels like the brand.
+
+---
+
+## Chapter 1 — Fonts, offline
+
+The fonts come from npm (`@fontsource/titillium-web`, `@fontsource/dm-sans`), not from Google's servers: they're bundled with the app, so they work offline in the native app, and no third party learns who opened it.
+
+Only the weights we use are imported, in `src/main.ts`: every weight is a file to download.
+
+What we **don't** borrow: SAIT's logo. It's theirs, and an app that isn't official shouldn't look official. The icon in `public/logo.png` is ours to design (then `pnpm mobile:assets` makes every size).

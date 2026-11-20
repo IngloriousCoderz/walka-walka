@@ -47,6 +47,7 @@ export const App = {
       <header class="pt-safe">
         ${AppBar.render({
           title: "Walka Walka",
+          color: "primary",
           trailing: html`<nav class="app-nav">
             ${[
               Select.render({

@@ -32,7 +32,7 @@ export default defineConfig({
         name: "Walka Walka",
         short_name: "Walka Walka",
         description: "An Inglorious Web app.",
-        theme_color: "#ffffff",
+        theme_color: "#a6192e",
         background_color: "#ffffff",
         display: "standalone",
         start_url: "/",

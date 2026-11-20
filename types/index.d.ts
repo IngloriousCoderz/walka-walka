@@ -49,6 +49,7 @@ import type {
   RouterType,
 } from "@inglorious/web/router"
 
+import type { InboxItem } from "./inbox"
 import type { Place } from "./places"
 import type {
   JoinedWalk,
@@ -92,6 +93,18 @@ export interface MyWalksEntity extends BaseEntity {
   actionError: string | null
   busyId: string | null
   cancelingId: string | null
+}
+
+// The notifications: the app bar's bell counts the unread, /inbox lists them.
+export interface InboxEntity extends BaseEntity {
+  type: "Inbox"
+  items: InboxItem[]
+  status: "idle" | RequestStatus
+  error: string | null
+  readStatus: "idle" | RequestStatus
+  readError: string | null
+  // What the last load had, to tell what's new; null before the first.
+  knownIds: string[] | null
 }
 
 export interface AppRouterEntity extends RouterEntity {
@@ -174,6 +187,7 @@ export type AppEntity =
   | NearbyEntity
   | PostWalkEntity
   | MyWalksEntity
+  | InboxEntity
   | AppRouterEntity
   | AppI18nEntity
   | AppAnalyticsEntity
@@ -197,6 +211,7 @@ export interface AppState extends EntitiesState<AppEntity> {
   nearby: NearbyEntity
   postWalk: PostWalkEntity
   myWalks: MyWalksEntity
+  inbox: InboxEntity
   analytics: AppAnalyticsEntity
   pushPrompt: AppPushPromptEntity
   nativeUpdate: AppNativeUpdateEntity
@@ -218,6 +233,7 @@ export type AppEvents = EventsOf<
   | NearbyType
   | PostWalkType
   | MyWalksType
+  | InboxType
   | RouterType
   | I18nType
   | AnalyticsType
@@ -302,3 +318,17 @@ export type PlaceSearchType = {
   reset: (entity: PlaceSearchEntity) => void
   render: (entity: PlaceSearchEntity, api: AppApi) => TemplateResult
 } & AsyncEvents<"search", PlaceSearchEntity, string, Place[], AppApi>
+
+export type InboxType = {
+  create: (entity: InboxEntity) => void
+  routeChange: (
+    entity: InboxEntity,
+    payload: RouteChangePayload,
+    api: AppApi,
+  ) => void
+  inboxClear: (entity: InboxEntity) => void
+  open: (entity: InboxEntity, item: InboxItem, api: AppApi) => void
+  readAll: (entity: InboxEntity, payload: void, api: AppApi) => void
+  render: (entity: InboxEntity, api: AppApi) => TemplateResult
+} & AsyncEvents<"inboxLoad", InboxEntity, void, InboxItem[], AppApi> &
+  AsyncEvents<"readSave", InboxEntity, string[] | undefined, void, AppApi>

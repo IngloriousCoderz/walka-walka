@@ -701,6 +701,25 @@ That's how a framework grows: not by guessing what apps need, but by noticing wh
 
 ---
 
+## Chapter 11 — An inbox
+
+A push is easy to miss: the phone was in a pocket, or pushes are off. Since chapter 8, every push is also a row in `notifications`, so the app can keep them: a **bell** in the app bar counts the unread ones, and the inbox lists them all.
+
+- **The database** (`supabase/migrations/*_inbox.sql`): a `read_at` column, which is the only one a student may change (`grant update (read_at)`), and only on their own rows. What a notification says stays the server's to write.
+- **Live**: `notifications` joins the realtime publication. `withLiveReload` reloads the `Inbox` entity whenever someone is signed in, not only on its page: the bell counts on every page.
+- **News, not history**: what arrives while you're elsewhere also shows as a toast. The first load only learns what's there, so opening the app doesn't toast last week.
+- **Opening one** marks it read on screen at once, saves that, and goes where it points (`url`, set by the trigger).
+
+```bash
+supabase migration up
+pnpm test                 # 40 tests
+pnpm test:integration     # 18: nobody else can read or mark yours
+```
+
+**Try it**: sign in as Aiko in one browser and Marcus in another. Marcus asks to join Aiko's walk: Aiko's bell counts it, and a toast says so.
+
+---
+
 ## Cheat sheet — from a fresh clone
 
 With Node 26, pnpm, the Supabase CLI and Docker (running):
@@ -731,5 +750,5 @@ pnpm dev                           # http://localhost:5173
 | Fresh demo walks         | `supabase db reset --yes`                                                                                  |
 | Location outside Calgary | Chrome DevTools → Sensors → `51.0618`, `-114.0892`                                                         |
 | Tests                    | `pnpm test`, and `pnpm test:integration` with the stack running                                            |
-| Pushes                   | Chapter 8                                                                                                  |
+| Pushes                   | Chapter 8, and the inbox in chapter 11                                                                     |
 | Phone                    | Chapter 9                                                                                                  |

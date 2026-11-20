@@ -147,5 +147,18 @@
       "unknown": "Something went wrong. Try again."
     },
     "outsideSait": "Walka Walka is for SAIT students: another address needs an invitation."
+  },
+  "inbox": {
+    "title": "Notifications",
+    "openUnread_one": "Notifications, {{count}} unread",
+    "openUnread_other": "Notifications, {{count}} unread",
+    "readAll": "Mark all read",
+    "loading": "Loading your notifications…",
+    "empty": "Nothing yet. When someone asks to join your walk, or answers you, it shows up here.",
+    "new": "new",
+    "errors": {
+      "network": "No connection. Check it and try again.",
+      "unknown": "Something went wrong. Try again."
+    }
   }
 }

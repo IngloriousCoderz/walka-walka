@@ -1,17 +1,21 @@
+import bell from "@iconify-icons/fa7-solid/bell"
 import locationDot from "@iconify-icons/fa7-solid/location-dot"
 import personWalking from "@iconify-icons/fa7-solid/person-walking"
 import plus from "@iconify-icons/fa7-solid/plus"
 import user from "@iconify-icons/fa7-solid/user"
 import { AppBar } from "@inglorious/ui/app-bar"
+import { Badge } from "@inglorious/ui/badge"
 import { BottomNavigation } from "@inglorious/ui/bottom-navigation"
 import { Container } from "@inglorious/ui/container"
 import { Drawer } from "@inglorious/ui/drawer"
 import { Icon } from "@inglorious/ui/icon"
+import { IconButton } from "@inglorious/ui/icon-button"
 import { List } from "@inglorious/ui/list"
 import { html } from "@inglorious/web"
 
 import type { AppApi } from "../../types"
 import { t } from "../i18n"
+import { unreadCount } from "../views/inbox"
 
 export const App = {
   render(props: Record<string, unknown> | null, api: AppApi) {
@@ -48,6 +52,7 @@ export const App = {
         ${AppBar.render({
           title: "Walka Walka",
           color: "primary",
+          trailing: renderBell(api),
         })}
       </header>
       <main>
@@ -66,4 +71,21 @@ export const App = {
       </footer>
     `
   },
+}
+
+// Every page shows how many notifications wait; the inbox lists them.
+function renderBell(api: AppApi) {
+  const unread = unreadCount(api.getEntity("inbox")!.items)
+  return html`<span class="app-bell">
+    ${IconButton.render({
+      icon: Icon.render({ icon: bell, size: "lg" }),
+      variant: "ghost",
+      shape: "round",
+      ariaLabel: unread
+        ? t("inbox.openUnread", { count: unread })
+        : t("inbox.title"),
+      onClick: () => api.notify("#router:navigate", "/inbox"),
+    })}
+    ${unread ? Badge.render({ color: "secondary", size: "sm", shape: "pill", children: unread }) : ""}
+  </span>`
 }

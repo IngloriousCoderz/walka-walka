@@ -12,6 +12,8 @@ import "@inglorious/ui/drawer.css"
 import "@inglorious/ui/list.css"
 import "@inglorious/ui/flex.css"
 import "@inglorious/ui/icon.css"
+import "@inglorious/ui/icon-button.css"
+import "@inglorious/ui/badge.css"
 import "@inglorious/ui/select.css"
 import "@inglorious/ui/snackbar.css"
 import "@inglorious/ui/button.css"
@@ -45,6 +47,7 @@ ready.then(() => mount(store, renderApp, document.getElementById("root")!))
 
 supabase.auth.onAuthStateChange((_event, session) => {
   store.notify(session ? "#pushPrompt:pushStart" : "#pushPrompt:pushStop")
+  store.notify(session ? "#inbox:inboxLoad" : "#inbox:inboxClear")
 })
 
 haptics.use(Haptics)

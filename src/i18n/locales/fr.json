@@ -147,5 +147,18 @@
       "unknown": "Une erreur s'est produite. Réessayez."
     },
     "outsideSait": "Walka Walka est réservé aux étudiants du SAIT : une autre adresse doit être invitée."
+  },
+  "inbox": {
+    "title": "Notifications",
+    "openUnread_one": "Notifications, {{count}} non lue",
+    "openUnread_other": "Notifications, {{count}} non lues",
+    "readAll": "Tout marquer comme lu",
+    "loading": "Chargement de vos notifications…",
+    "empty": "Rien pour l'instant. Quand quelqu'un demande à rejoindre votre marche, ou vous répond, cela s'affiche ici.",
+    "new": "nouveau",
+    "errors": {
+      "network": "Pas de connexion. Vérifiez-la et réessayez.",
+      "unknown": "Une erreur s'est produite. Réessayez."
+    }
   }
 }

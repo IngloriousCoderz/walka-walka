@@ -540,3 +540,76 @@ The dialog is `ConfirmDialog` from Inglorious UI: no state of its own, only prop
 ```bash
 pnpm test     # 23 tests
 ```
+
+---
+
+## Chapter 8 — Notifications
+
+Two moments deserve a push, even with the app closed:
+
+- **Someone asks to join your walk** → "Marcus wants to walk with you"
+- **The poster answers you** → "Aiko accepted: you're walking together"
+
+The scaffold already has the whole pipeline: **inserting a row in `notifications` sends a push** (a trigger calls the `push-notify` function, which calls Firebase Cloud Messaging). So all we add is a trigger on `walk_requests` (`supabase/migrations/…_walk_notifications.sql`) that inserts the right row.
+
+The app never inserts notifications itself: there's no insert rule for students, so nobody can push spam to someone else. The tests check that too.
+
+```bash
+supabase db reset --yes
+pnpm test:integration     # 14 tests: the notifications are written
+```
+
+---
+
+## Chapter 8 — Setting up Firebase (once)
+
+Without Firebase the app works: notifications are only written to the table, and nobody is asked about analytics, since there's nothing to measure with. To receive real pushes and measure usage:
+
+1. **Create a project** in the [Firebase console](https://console.firebase.google.com) and **add a web app**.
+2. Fill in `.env.local` from Project settings → General → your web app: `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_MESSAGING_SENDER_ID`, `VITE_FIREBASE_APP_ID`, `VITE_FIREBASE_MEASUREMENT_ID`. These end up in the app: they are not secret.
+3. `VITE_FIREBASE_VAPID_KEY`: Project settings → Cloud Messaging → Web configuration → generate a key pair.
+4. **The secret part**: Project settings → Service accounts → **Generate new private key**. Never commit this file.
+5. In the Google Cloud console, give that service account the **Firebase Cloud Messaging API Admin** role.
+6. Put the file's JSON **on one line** in `supabase/functions/.env` (git ignores it):
+
+   ```ini
+   FCM_SERVICE_ACCOUNT={"type":"service_account",…}
+   ```
+
+7. Restart the stack so the function reads it: `supabase stop && supabase start`.
+
+---
+
+## Chapter 8 — Trying a push
+
+A browser's service worker only exists in a **build**, so:
+
+```bash
+pnpm build && pnpm preview     # http://localhost:4173
+```
+
+1. Sign in as Marcus and accept the notifications prompt.
+2. In a private window, sign in as Aiko and ask to join one of Marcus's walks.
+3. Marcus gets the push, even with his tab in the background. Tapping it opens My walks.
+
+On a phone, add the Android and iOS apps to the same Firebase project and put `google-services.json` and `GoogleService-Info.plist` in the project's root: `pnpm mobile:sync` copies them where they belong.
+
+---
+
+## Chapter 8 — Measuring, with consent
+
+With the Firebase values of step 2, `VITE_FIREBASE_MEASUREMENT_ID` included, the app asks **once** whether it may measure how it's used. Until someone says yes, no analytics code even loads; saying no loads nothing either. Page views follow the router by themselves.
+
+The app's own moments are three events, sent through the `analytics` entity, and dropped without consent:
+
+| Event                 | When                              |
+| --------------------- | --------------------------------- |
+| `walk_post`           | A walk is posted                  |
+| `walk_join_ask`       | Someone asks to join              |
+| `walk_request_answer` | The poster answers, with `status` |
+
+```ts
+api.notify("#analytics:analyticsTrack", { name: "walk_post" })
+```
+
+Watch them arrive in the Firebase console → Analytics → **Realtime**. Before the stores, the privacy policy must say that Google measures usage, and only with consent.

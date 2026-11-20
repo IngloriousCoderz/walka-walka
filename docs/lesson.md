@@ -181,3 +181,100 @@ The fonts come from npm (`@fontsource/titillium-web`, `@fontsource/dm-sans`), no
 Only the weights we use are imported, in `src/main.ts`: every weight is a file to download.
 
 What we **don't** borrow: SAIT's logo. It's theirs, and an app that isn't official shouldn't look official. The icon in `public/logo.png` is ours to design (then `pnpm mobile:assets` makes every size).
+
+---
+
+## Step 3 — A backend on your laptop
+
+Supabase gives us a Postgres database, sign-in, file storage and server functions. The whole thing runs locally in Docker: free, resettable, and offline.
+
+```bash
+supabase start            # the first run downloads the images: a few minutes
+```
+
+It prints the addresses and keys of the local stack (`supabase status` prints them again). Copy two of them into `.env.local`, which git ignores:
+
+```bash
+cp .env.example .env.local
+```
+
+```ini
+VITE_SUPABASE_URL=http://127.0.0.1:55321
+VITE_SUPABASE_ANON_KEY=<PUBLISHABLE_KEY from supabase start>
+```
+
+Then start the app:
+
+```bash
+pnpm dev
+```
+
+Open http://localhost:5173.
+
+---
+
+## Step 3 — Signing in
+
+`supabase/seed.sql` creates three students, all with the password `walka-local`:
+
+| Email                      | Who                          |
+| -------------------------- | ---------------------------- |
+| `aiko.tanaka@edu.sait.ca`  | First year, walks at 7:40    |
+| `marcus.brown@edu.sait.ca` | Walks the same way every day |
+| `priya.sharma@edu.sait.ca` | Has late labs                |
+
+Creating a new account sends a confirmation code by email. Locally no email leaves your laptop: they all land in **Mailpit**, at http://127.0.0.1:55324.
+
+**Try it**: sign up with `you@gmail.com`. The app warns that another address needs an invitation, and the database refuses the account.
+
+---
+
+## Step 3 — Only SAIT students
+
+The rule is enforced **twice**, for two different reasons:
+
+1. **In the database** (`supabase/migrations/…_sait_only.sql`): Supabase Auth calls `hook_sait_only` before creating any account, and it refuses any address outside `edu.sait.ca` and `sait.ca`, unless it's an **invited guest**. This is the real protection: nobody can skip it, even by calling the API directly.
+2. **In the app** (`src/app/auth/`): the sign-in screen checks the domains, only to warn right away. It can't know the guests (only the database can read them), so it warns and lets the database decide.
+
+> **Never trust the client.** Anything the app checks, someone can bypass with a terminal. Checks in the browser are for kindness; checks on the server are for security.
+
+The emails send a **code** instead of a link (`supabase/templates/`): a code works inside the native app too, where a link would open the browser.
+
+---
+
+## Step 3 — Invited guests
+
+Teachers and visitors don't have a SAIT student address. The `invited_emails` table lists the addresses allowed anyway. No student can read it: only the sign-up hook does.
+
+To invite yourself on your laptop, copy the example and put your address in it:
+
+```bash
+cp supabase/seed.local.example.sql supabase/seed.local.sql
+```
+
+```sql
+insert into public.invited_emails (email) values
+  ('you@example.com');
+```
+
+`supabase db reset --yes` loads it after `seed.sql`, every time. Git ignores `seed.local.sql`, so your address never reaches the repository. Then sign up with it: the confirmation code arrives in Mailpit.
+
+---
+
+## Step 3 — What changed
+
+- `supabase/config.toml` (from `supabase init`): email confirmation on, emails with codes, passwords of 8 characters or more, and the sign-up hook.
+- **Ports moved from 543xx to 553xx**, so this project runs next to other Supabase projects on the same laptop.
+- `src/app/auth/helpers.ts`: `isSaitEmail`, with its tests.
+- `src/app/auth/index.ts`: the screen's `emailSubmit` notes an address outside SAIT, to warn about it, then hands over to the framework's.
+- `supabase/seed.local.example.sql`: how to invite your own address.
+
+```bash
+pnpm test     # 7 tests
+```
+
+**Reset the database at any time** (migrations and seed again, all data gone):
+
+```bash
+supabase db reset --yes
+```

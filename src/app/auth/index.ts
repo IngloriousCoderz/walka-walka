@@ -9,9 +9,20 @@ import { createAuth } from "@inglorious/web/auth"
 import type { AppApi, AppAuthEntity } from "../../../types"
 import { authAdapter } from "../../api/auth"
 import { t } from "../../i18n"
+import { isSaitEmail } from "./helpers"
+
+const auth = createAuth({ adapter: authAdapter, methods: ["password", "code"] })
 
 export const Auth = {
-  ...createAuth({ adapter: authAdapter, methods: ["password", "code"] }),
+  ...auth,
+
+  // SAIT addresses, plus guests the database invited. Only the database knows
+  // the guests, so it decides; the screen only warns, early, that another
+  // address needs an invitation.
+  emailSubmit(entity: AppAuthEntity, email: string, api: AppApi) {
+    entity.isOutsideSait = !isSaitEmail(email)
+    auth.emailSubmit(entity, email, api)
+  },
 
   // Signed in, the profile page at /profile; signed out, the sign-in
   // screen, which src/main shows instead of the app.
@@ -35,7 +46,8 @@ const steps: Partial<
 
 function screen(entity: AppAuthEntity, api: AppApi) {
   return html`<section class="app-auth">
-    ${steps[entity.step]?.(entity, api)} ${errorMessage(entity)}
+    ${steps[entity.step]?.(entity, api)} ${saitHint(entity)}
+    ${errorMessage(entity)}
     <div id="captcha"></div>
   </section>`
 }
@@ -264,6 +276,13 @@ function errorMessage(entity: AppAuthEntity) {
     severity: "error",
     description: t(`auth.errors.${entity.error}`),
   })
+}
+
+// When an address outside SAIT goes on to create an account, or fails to.
+function saitHint(entity: AppAuthEntity) {
+  const isRelevant = entity.step === "signUp" || Boolean(entity.error)
+  if (!entity.isOutsideSait || !isRelevant) return nothing
+  return Alert.render({ severity: "info", description: t("auth.outsideSait") })
 }
 
 function resendAction(entity: AppAuthEntity, api: AppApi) {

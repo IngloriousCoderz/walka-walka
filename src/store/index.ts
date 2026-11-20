@@ -20,6 +20,7 @@ import type {
   AppEntity,
   AppEvents,
   AppState,
+  InboxEntity,
   MyWalksEntity,
 } from "../../types"
 import { supabase } from "../api/supabase"
@@ -30,6 +31,7 @@ import { NativeUpdate } from "../app/native-update"
 import { PushPrompt } from "../app/push-prompt"
 import { PlaceSearch } from "../common/place-search"
 import { I18n } from "../i18n"
+import { Inbox } from "../views/inbox"
 import { MyWalks } from "../views/my-walks"
 import { Nearby } from "../views/nearby"
 import { PostWalk } from "../views/post-walk"
@@ -66,6 +68,16 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
         isLive: (entity, api) => api.getEntity("router")!.route === entity.id,
       }),
     ],
+    Inbox: [
+      Inbox,
+      withLiveReload<InboxEntity, AppApi>({
+        source: live,
+        tables: ["notifications"],
+        event: "inboxLoad",
+        // Whenever someone is signed in: the bell counts on every page.
+        isLive: (_entity, api) => Boolean(api.getEntity("auth")!.user),
+      }),
+    ],
     Router,
     I18n,
     Analytics,
@@ -85,7 +97,7 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
   },
   entities,
   middlewares: [withTransitions(), ...middlewares],
-  // Creates an entity for each type that has none: nearby, postWalk, myWalks, router, i18n, analytics, pushPrompt, nativeUpdate, liveUpdate, auth, geolocation, toast, keyboard, systemBars, appLinks, pwaUpdate.
+  // Creates an entity for each type that has none: nearby, postWalk, myWalks, inbox, router, i18n, analytics, pushPrompt, nativeUpdate, liveUpdate, auth, geolocation, toast, keyboard, systemBars, appLinks, pwaUpdate.
   autoCreateEntities: true,
   // Freezes the state in development, so a write outside a handler throws.
   devMode: import.meta.env.DEV,

@@ -15,3 +15,18 @@ export function formatDeparture(iso: string, now: number, locale: string) {
 export function minutesUntil(iso: string, now: number) {
   return Math.round((new Date(iso).getTime() - now) / MINUTE_MS)
 }
+
+const JUST_NOW = 0
+const HOUR_MINUTES = 60
+const DAY_HOURS = 24
+
+// How long ago, as people say it: "5 minutes ago", "yesterday".
+export function timeAgo(iso: string, now: number, locale: string) {
+  const format = new Intl.RelativeTimeFormat(locale, { numeric: "auto" })
+  const minutes = -Math.round((now - new Date(iso).getTime()) / MINUTE_MS)
+  if (!minutes) return format.format(JUST_NOW, "second")
+  if (minutes > -HOUR_MINUTES) return format.format(minutes, "minute")
+  const hours = Math.round(minutes / HOUR_MINUTES)
+  if (hours > -DAY_HOURS) return format.format(hours, "hour")
+  return format.format(Math.round(hours / DAY_HOURS), "day")
+}

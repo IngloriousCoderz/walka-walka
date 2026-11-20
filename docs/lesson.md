@@ -426,3 +426,60 @@ The phones need to explain why the app asks. Both texts live in `package.json`, 
 ```bash
 pnpm test     # 13 tests
 ```
+
+---
+
+## Step 7 — Walks near you
+
+The Nearby tab lists walks starting **within 1 km**, leaving **in the next hour**, closest in time first. Each card says when, how far, and with whom; the button asks to join.
+
+```bash
+supabase db reset --yes    # the seed adds four walks around SAIT, leaving soon
+pnpm dev                   # sign in as Aiko, open Nearby
+```
+
+**Not in Calgary?** The walks are around SAIT. In Chrome, open DevTools → ⋮ → More tools → **Sensors**, and set the location to latitude `51.0618`, longitude `-114.0892`. The seeded walks leave 15 to 180 minutes after the reset: reset again for fresh ones.
+
+---
+
+## Step 7 — Events between screens
+
+Where the phone is matters to two tabs. Rather than each asking on its own, the `Geolocation` type **announces** every new position:
+
+```ts
+// src/app/geolocation/index.ts
+geolocationSuccess(entity, position, api) {
+  base.geolocationSuccess(entity, position)   // the framework's own handler
+  api.notify("positionChange", entity.position) // then tell everyone
+}
+```
+
+`Nearby` answers `positionChange`, but only while it's on screen (positions also arrive for the Post tab):
+
+```ts
+positionChange(entity, position, api) {
+  if (!position || api.getEntity("router")!.route !== entity.id) return
+  api.notify(`#${entity.id}:walksLoad`, { lat: …, lng: … })
+}
+```
+
+Opening the tab or tapping **Refresh** asks for a new position; the position loads the walks. Nobody calls anybody: events flow.
+
+---
+
+## Step 7 — Asking to join
+
+`handleRequest("join", …)` with its own `joinStatus` and `joinError`, so asking doesn't disturb the list's loading state:
+
+- **start**: the button of that walk waits (`joiningId`).
+- **success**: the card says "Asked to join" **at once**, and a toast confirms. Your own changes show immediately; reloading is for other people's changes.
+- **error**: a toast says what went wrong in words.
+
+The tests (`src/views/nearby/handlers.test.ts`) run those steps one by one, as the store does.
+
+```bash
+pnpm test                 # 19 tests
+pnpm test:integration     # 11 tests, after a reset
+```
+
+**Try it**: ask to join a walk, then sign in as Marcus in another browser (or a private window). Step 8 gives him a place to answer.

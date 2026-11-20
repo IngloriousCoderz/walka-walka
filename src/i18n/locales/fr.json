@@ -5,9 +5,32 @@
     "walks": "Mes marches"
   },
   "language": "Langue",
+  "walk": {
+    "route": "{{from}} → {{to}}",
+    "inMinutes_one": "dans {{count}} minute",
+    "inMinutes_other": "dans {{count}} minutes",
+    "leavingNow": "départ imminent",
+    "status": {
+      "pending": "Demande envoyée : en attente de réponse",
+      "accepted": "Vous êtes du voyage !",
+      "declined": "Pas cette fois"
+    }
+  },
   "nearby": {
     "title": "Marches près de vous",
-    "empty": "Personne ne part près de vous pour l'instant."
+    "empty": "Personne ne part près de vous pour l'instant.",
+    "refresh": "Actualiser",
+    "loading": "Recherche de marches près de vous…",
+    "distance": "à {{distance}} m",
+    "postedBy": "avec {{name}}",
+    "yours": "Votre marche",
+    "join": "Demander à se joindre",
+    "requested": "Demande envoyée",
+    "errors": {
+      "noLocation": "Partagez votre position pour voir les marches près de vous.",
+      "network": "Pas de connexion. Vérifiez-la et réessayez.",
+      "unknown": "Une erreur s'est produite. Réessayez."
+    }
   },
   "postWalk": {
     "title": "Publier une marche",

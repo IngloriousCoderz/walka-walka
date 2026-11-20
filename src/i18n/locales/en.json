@@ -5,9 +5,32 @@
     "walks": "My walks"
   },
   "language": "Language",
+  "walk": {
+    "route": "{{from}} → {{to}}",
+    "inMinutes_one": "in {{count}} minute",
+    "inMinutes_other": "in {{count}} minutes",
+    "leavingNow": "leaving now",
+    "status": {
+      "pending": "Asked to join: waiting for an answer",
+      "accepted": "You're in!",
+      "declined": "Not this time"
+    }
+  },
   "nearby": {
     "title": "Walks near you",
-    "empty": "Nobody is leaving near you right now."
+    "empty": "Nobody is leaving near you right now.",
+    "refresh": "Refresh",
+    "loading": "Looking for walks near you…",
+    "distance": "{{distance}} m away",
+    "postedBy": "with {{name}}",
+    "yours": "Your walk",
+    "join": "Ask to join",
+    "requested": "Request sent",
+    "errors": {
+      "noLocation": "Share your location to see walks near you.",
+      "network": "No connection. Check it and try again.",
+      "unknown": "Something went wrong. Try again."
+    }
   },
   "postWalk": {
     "title": "Post a walk",

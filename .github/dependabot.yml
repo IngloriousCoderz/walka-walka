@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # One pull request a week for Inglorious Forge, one for everything else.
+    groups:
+      inglorious:
+        patterns: ["@inglorious/*"]
+      dependencies:
+        patterns: ["*"]

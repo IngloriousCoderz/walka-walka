@@ -314,3 +314,63 @@ pnpm dev      # sign in as aiko.tanaka@edu.sait.ca / walka-local
 ```
 
 **Try it**: switch the language in Profile (chosen once, so not in the app bar), and widen the window until the tab bar becomes a drawer. On Android, the back button on a tab closes the app, as other apps do (`backButton.rootPaths` in `src/store/entities.ts`).
+
+---
+
+## Chapter 4 — Who may see what?
+
+Before any table, decide who may see what. This table **is** the specification:
+
+|                   | Poster | Accepted buddy | Other student | Signed out |
+| ----------------- | ------ | -------------- | ------------- | ---------- |
+| The walk          | yes    | yes            | yes           | no         |
+| Where it starts   | ~100 m | ~100 m         | ~100 m        | no         |
+| The meeting point | yes    | yes            | **no**        | no         |
+| Requests to join  | all    | own            | own           | no         |
+| Accept or decline | yes    | no             | no            | no         |
+
+The database enforces it with **row-level security** (RLS): every query, from the app, a script or a terminal, only ever sees the rows its user may see.
+
+---
+
+## Chapter 4 — The tables
+
+`supabase/migrations/…_walks.sql`:
+
+- **`profiles`**: a first name per student, created automatically at sign-up. Never the email.
+- **`walks`**: from, to, when, notes, and the start as `numeric(5, 3)`: **three decimals, about 100 m**. The column can't hold more, so the app can't leak a home address even by mistake.
+- **`meeting_points`**: apart from the walk, so its own rule can hide it from everyone but the poster and the buddies.
+- **`walk_requests`**: who asked to join, and the status. Only the **status** column can change (`grant update (status)`), and only by the poster.
+
+Two functions keep the app simple:
+
+- **`post_walk`** saves a walk and its meeting point together: both or neither.
+- **`nearby_walks`** finds walks starting within a radius, leaving soon, with the caller's own request.
+
+---
+
+## Chapter 4 — Tests first
+
+`src/api/walks.integration.test.ts` signs in as Aiko, Marcus and Priya **at the same time**, and checks every cell of the table: Marcus sees Aiko's walk but not where to meet, can't accept his own request, sees the meeting point once Aiko accepts; Priya never sees Marcus's request.
+
+```bash
+supabase db reset --yes        # apply the new migration
+pnpm test:integration          # 11 tests against the local stack
+pnpm test                      # the unit tests, no backend needed
+```
+
+**Break it on purpose**: in Supabase Studio (http://127.0.0.1:55323), open the policies of `meeting_points` and replace the rule with `true`. Three tests fail. Then `supabase db reset --yes` puts it back.
+
+> A security rule without a test is a wish.
+
+---
+
+## Chapter 4 — The API layer
+
+`src/api/walks.ts` is the only code that talks to the database about walks: `postWalk`, `nearbyWalks`, `postedWalks`, `joinedWalks`, `askToJoin`, `answerRequest`, `withdrawRequest`, `cancelWalk`.
+
+- The database speaks `snake_case`; the app speaks `camelCase`. Each function converts whole rows, so the screens never see a database name.
+- Each function takes the Supabase client **last**: the app uses the signed-in one, the tests pass Aiko's, Marcus's or Priya's.
+- Types live in `types/walks.d.ts`.
+
+The screens of the next chapters only call these functions.

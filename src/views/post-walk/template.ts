@@ -24,24 +24,7 @@ export const template: PostWalkTemplate & ThisType<PostWalkTemplate> = {
     return html`
       <h1>${t("postWalk.title")}</h1>
       <form class=${styles.form} @submit=${onSubmit(props.onSubmit)}>
-        ${Input.render({
-          name: "fromPlace",
-          label: t("postWalk.fromPlace"),
-          placeholder: t("postWalk.fromPlaceHint"),
-          value: values.fromPlace,
-          isRequired: true,
-          isFullWidth: true,
-          size: "lg",
-        })}
-        ${Input.render({
-          name: "toPlace",
-          label: t("postWalk.toPlace"),
-          placeholder: t("postWalk.toPlaceHint"),
-          value: values.toPlace,
-          isRequired: true,
-          isFullWidth: true,
-          size: "lg",
-        })}
+        ${props.fromField} ${props.toField}
         ${Input.render({
           name: "departsAt",
           inputType: "datetime-local",
@@ -91,7 +74,12 @@ export const template: PostWalkTemplate & ThisType<PostWalkTemplate> = {
 
   // Where the walk starts comes from the phone, never typed: about 100 m is
   // all the database keeps of it.
-  renderLocation({ location, onLocate }) {
+  renderLocation({ location, chosenStart, onLocate }) {
+    if (chosenStart) {
+      return html`<p class=${styles.location}>
+        ${t("postWalk.startsAtPlace")}
+      </p>`
+    }
     if (location.isFound) {
       return html`<p class=${styles.location}>
         ${t("postWalk.locationFound", { accuracy: location.accuracyM ?? "?" })}

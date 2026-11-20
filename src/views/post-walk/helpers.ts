@@ -1,5 +1,4 @@
-import type { GeolocationPosition } from "@inglorious/web/device/geolocation"
-
+import type { Coordinates } from "../../../types/places"
 import type { NewWalk, WalkProblem, WalkValues } from "../../../types/walks"
 
 // The database accepts walks up to a week ahead.
@@ -20,10 +19,10 @@ export function emptyWalkValues(): WalkValues {
 // wrong in words.
 export function walkProblem(
   values: WalkValues,
-  position: GeolocationPosition | null,
+  start: Coordinates | null,
   now: number,
 ): WalkProblem | null {
-  if (!position) return "noLocation"
+  if (!start) return "noLocation"
   const places = [values.fromPlace, values.toPlace, values.meetingPoint]
   if (places.some((place) => place.trim().length < MIN_PLACE_LENGTH)) {
     return "missingPlace"
@@ -34,17 +33,14 @@ export function walkProblem(
   return null
 }
 
-export function toNewWalk(
-  values: WalkValues,
-  position: GeolocationPosition,
-): NewWalk {
+export function toNewWalk(values: WalkValues, start: Coordinates): NewWalk {
   return {
     fromPlace: values.fromPlace.trim(),
     toPlace: values.toPlace.trim(),
     // A datetime-local value has no time zone: the phone's is the right one.
     departsAt: new Date(values.departsAt).toISOString(),
-    startLat: position.coords.latitude,
-    startLng: position.coords.longitude,
+    startLat: start.lat,
+    startLng: start.lng,
     meetingPoint: values.meetingPoint.trim(),
     notes: values.notes.trim(),
   }

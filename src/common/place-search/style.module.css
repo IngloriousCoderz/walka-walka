@@ -1,0 +1,33 @@
+.field {
+  position: relative;
+}
+
+.list {
+  position: absolute;
+  inset-inline: 0;
+  z-index: 10;
+  margin: var(--iw-space-1, 0.25rem) 0 0;
+  padding: var(--iw-space-1, 0.25rem) 0;
+  list-style: none;
+  background: var(--iw-color-surface);
+  border: 1px solid var(--iw-color-border);
+  border-radius: var(--iw-radius-md);
+  box-shadow: var(--iw-shadow-md);
+}
+
+.option {
+  padding: var(--iw-space-3, 0.75rem) var(--iw-space-4, 1rem);
+  cursor: pointer;
+}
+
+.option:hover,
+.active {
+  background: var(--iw-color-surface-hover);
+}
+
+/* OpenStreetMap's licence asks for the credit wherever its data shows. */
+.credit {
+  padding: var(--iw-space-1, 0.25rem) var(--iw-space-4, 1rem);
+  font-size: var(--iw-font-size-xs, 0.75rem);
+  color: var(--iw-color-text-muted);
+}

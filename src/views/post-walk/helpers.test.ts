@@ -3,18 +3,7 @@ import { describe, expect, it } from "vitest"
 import { emptyWalkValues, toNewWalk, walkProblem } from "./helpers"
 
 const NOW = new Date("2026-12-01T07:00").getTime()
-const POSITION = {
-  coords: {
-    latitude: 51.0612,
-    longitude: -114.0888,
-    accuracy: 20,
-    altitude: null,
-    altitudeAccuracy: null,
-    heading: null,
-    speed: null,
-  },
-  timestamp: NOW,
-}
+const START = { lat: 51.0612, lng: -114.0888 }
 const VALUES = {
   ...emptyWalkValues(),
   fromPlace: " Kensington ",
@@ -25,15 +14,15 @@ const VALUES = {
 
 describe("walkProblem", () => {
   it("accepts a complete walk later today", () => {
-    expect(walkProblem(VALUES, POSITION, NOW)).toBeNull()
+    expect(walkProblem(VALUES, START, NOW)).toBeNull()
   })
 
-  it("needs the phone's location first", () => {
+  it("needs a start: a picked place or the phone's location", () => {
     expect(walkProblem(VALUES, null, NOW)).toBe("noLocation")
   })
 
   it("needs both places and a meeting point", () => {
-    expect(walkProblem({ ...VALUES, meetingPoint: " " }, POSITION, NOW)).toBe(
+    expect(walkProblem({ ...VALUES, meetingPoint: " " }, START, NOW)).toBe(
       "missingPlace",
     )
   })
@@ -42,14 +31,14 @@ describe("walkProblem", () => {
     const past = { ...VALUES, departsAt: "2026-12-01T06:59" }
     const tooFar = { ...VALUES, departsAt: "2026-12-09T07:00" }
 
-    expect(walkProblem(past, POSITION, NOW)).toBe("past")
-    expect(walkProblem(tooFar, POSITION, NOW)).toBe("tooFar")
+    expect(walkProblem(past, START, NOW)).toBe("past")
+    expect(walkProblem(tooFar, START, NOW)).toBe("tooFar")
   })
 })
 
 describe("toNewWalk", () => {
-  it("trims the text and takes the start from the phone", () => {
-    expect(toNewWalk(VALUES, POSITION)).toEqual({
+  it("trims the text and keeps the start it is given", () => {
+    expect(toNewWalk(VALUES, START)).toEqual({
       fromPlace: "Kensington",
       toPlace: "SAIT",
       departsAt: new Date("2026-12-01T07:40").toISOString(),

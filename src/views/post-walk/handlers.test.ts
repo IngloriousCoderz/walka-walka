@@ -50,6 +50,31 @@ describe("PostWalk handlers", () => {
     expect(events).toEqual([])
   })
 
+  it("starts the walk at the place picked for From, over the phone's", () => {
+    const position = { coords: { latitude: 51.06, longitude: -114.09 } }
+    const kensington = {
+      label: "Kensington, Calgary",
+      lat: 51.0525,
+      lng: -114.087,
+    }
+    const api = createMockApi({
+      postWalk: form,
+      geolocation: located(position),
+      fromPlace: { id: "fromPlace", type: "PlaceSearch", chosen: kensington },
+    })
+    const { events } = trigger(form, handlers.submit, values, api)
+
+    expect(events).toEqual([
+      {
+        type: "#postWalk:walkPost",
+        payload: expect.objectContaining({
+          startLat: 51.0525,
+          startLng: -114.087,
+        }),
+      },
+    ])
+  })
+
   it("posts the walk from where the phone is", () => {
     const position = { coords: { latitude: 51.06, longitude: -114.09 } }
     const api = createMockApi({

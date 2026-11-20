@@ -5,6 +5,7 @@ import { createStore } from "@inglorious/store"
 import { liveUpdateManifestUrl, realtimeSource } from "@inglorious/supabase"
 import { Toast } from "@inglorious/ui/toast"
 import { withTransitions } from "@inglorious/ui/view-transitions"
+import { withDebounce } from "@inglorious/web/decorators/with-debounce"
 import { withLiveReload } from "@inglorious/web/decorators/with-live-reload"
 import { Keyboard } from "@inglorious/web/device/keyboard"
 import { createAppLinks } from "@inglorious/web/native/app-links"
@@ -27,6 +28,7 @@ import { Auth } from "../app/auth"
 import { Geolocation } from "../app/geolocation"
 import { NativeUpdate } from "../app/native-update"
 import { PushPrompt } from "../app/push-prompt"
+import { PlaceSearch } from "../common/place-search"
 import { I18n } from "../i18n"
 import { MyWalks } from "../views/my-walks"
 import { Nearby } from "../views/nearby"
@@ -36,6 +38,8 @@ import { middlewares } from "./middlewares"
 import { routes } from "./routes"
 
 setRoutes(routes)
+
+const SEARCH_DELAY_MS = 300
 
 // Changes others make, as they happen: someone asks to join, or answers.
 const live = realtimeSource(supabase)
@@ -69,6 +73,8 @@ export const store = createStore<AppEntity, AppState, AppEvents>({
     NativeUpdate,
     Auth,
     Geolocation,
+    // Photon is asked once typing pauses, not on every key.
+    PlaceSearch: [PlaceSearch, withDebounce(SEARCH_DELAY_MS, ["search"])],
     Toast,
     Keyboard,
     SystemBars: createSystemBars({ plugin: SystemBars }),

@@ -652,6 +652,55 @@ What the app still needs before the stores, each a good exercise:
 
 ---
 
+## Chapter 10 — Addresses that complete themselves
+
+Typing "Kensington, 10 St NW" with gloves on is nobody's idea of fun. The From and To fields now suggest places as you type, and picking one for From sets where the walk starts: you can post tonight's walk for tomorrow, from anywhere.
+
+Which service answers matters:
+
+| Option              | Key             | Cost                 | Fits MapLibre (chapter 9's next step)?         |
+| ------------------- | --------------- | -------------------- | ---------------------------------------------- |
+| Google Places       | Billing account | Free tier, then paid | Poorly: its terms want results on a Google map |
+| MapTiler Geocoding  | Free key        | Free tier            | Yes                                            |
+| **Photon** (komoot) | **None**        | **Free, fair use**   | **Yes: OpenStreetMap, like the map**           |
+| Nominatim           | None            | Free                 | No: its policy forbids search-as-you-type      |
+
+We use **Photon**: no account for anyone in the room, open data, and made for exactly this.
+
+---
+
+## Chapter 10 — How it's built
+
+- **`src/api/places.ts`**: the only code that knows Photon. `searchPlaces({ text, near, language })` returns plain `{ label, lat, lng }` places, near the phone or near SAIT.
+- **`src/common/place-search/`**: a `PlaceSearch` type, one entity per field (`fromPlace`, `toPlace` in `src/store/entities.ts`). It waits for three letters, and the store waits for typing to pause (`withDebounce(300, ["search"])`), which keeps Photon's fair use.
+- **Accessible**: the ARIA combobox pattern on the UI's own `Input`. Arrow keys move through the list, Enter picks, Escape closes, and screen readers announce it all.
+- **Privacy unchanged**: a picked place is still stored with three decimals, about 100 m.
+- **Credit**: OpenStreetMap's licence asks for it wherever its data shows, so the list says "© OpenStreetMap contributors".
+
+Why not Inglorious UI's `Combobox`? It filters a list the app already has; here the list comes from a server, as you type. Write that down: it's the start of the next slide.
+
+```bash
+pnpm test     # 33 tests
+```
+
+---
+
+## Chapter 10 — Is it generic?
+
+Look at the code we just wrote and ask, line by line: does this know about Walka Walka?
+
+| Piece                                                        | Knows about Walka Walka? | Belongs in                                                                                         |
+| ------------------------------------------------------------ | ------------------------ | -------------------------------------------------------------------------------------------------- |
+| Typing, waiting, suggestions, keyboard, ARIA                 | No                       | **Inglorious UI**: an `Autocomplete` for lists that come from a server                             |
+| Asking Photon, turning answers into places                   | No                       | **Forge**: a geocoding adapter, with Photon as the default and others (MapTiler, Google) beside it |
+| Starting near SAIT, the labels, what a pick means for a walk | **Yes**                  | This app                                                                                           |
+
+Most of it is generic. That's the moment to stop copying it into the next app and **extract it**: move the generic parts into the framework, with their tests, open a pull request, and let this app use them and delete its copy.
+
+That's how a framework grows: not by guessing what apps need, but by noticing what one app had to build.
+
+---
+
 ## Cheat sheet — from a fresh clone
 
 With Node 26, pnpm, the Supabase CLI and Docker (running):

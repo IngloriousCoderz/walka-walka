@@ -49,6 +49,7 @@ import type {
   RouterType,
 } from "@inglorious/web/router"
 
+import type { Place } from "./places"
 import type {
   JoinedWalk,
   MyWalksData,
@@ -119,6 +120,22 @@ export interface AppAuthEntity extends AuthEntity {
   isOutsideSait?: boolean
 }
 
+// An address field that suggests places: one entity per field.
+export interface PlaceSearchEntity extends BaseEntity {
+  type: "PlaceSearch"
+  name: string
+  labelKey: string
+  placeholderKey: string
+  query: string
+  places: Place[]
+  // The place picked from the suggestions, while the text is still its label.
+  chosen: Place | null
+  isOpen: boolean
+  activeIndex: number
+  status: "idle" | RequestStatus
+  error: string | null
+}
+
 // Where the phone is: shared by the screens that need it.
 export interface AppGeolocationEntity extends GeolocationEntity {
   type: "Geolocation"
@@ -164,6 +181,7 @@ export type AppEntity =
   | AppNativeUpdateEntity
   | AppAuthEntity
   | AppGeolocationEntity
+  | PlaceSearchEntity
   | AppToastEntity
   | AppKeyboardEntity
   | AppSystemBarsEntity
@@ -184,6 +202,8 @@ export interface AppState extends EntitiesState<AppEntity> {
   nativeUpdate: AppNativeUpdateEntity
   auth: AppAuthEntity
   geolocation: AppGeolocationEntity
+  fromPlace: PlaceSearchEntity
+  toPlace: PlaceSearchEntity
   toast: AppToastEntity
   keyboard: AppKeyboardEntity
   systemBars: AppSystemBarsEntity
@@ -205,6 +225,7 @@ export type AppEvents = EventsOf<
   | NativeUpdateType
   | AuthType
   | GeolocationType
+  | PlaceSearchType
   | ToastType
   | KeyboardType
   | SystemBarsType
@@ -269,3 +290,15 @@ export type MyWalksType = {
 // A shorthand for a type: `{ ... } satisfies AppType<NearbyEntity>` infers
 // its handlers' parameters, but neither lists its events nor types payloads.
 export type AppType<TEntity extends AppEntity> = EntityType<TEntity, AppApi>
+
+// The events of PlaceSearch, for `notify`; its renderers come from
+// PlaceSearchTemplate.
+export type PlaceSearchType = {
+  create: (entity: PlaceSearchEntity) => void
+  queryChange: (entity: PlaceSearchEntity, query: string, api: AppApi) => void
+  choose: (entity: PlaceSearchEntity, index: number) => void
+  activeMove: (entity: PlaceSearchEntity, step: number) => void
+  close: (entity: PlaceSearchEntity) => void
+  reset: (entity: PlaceSearchEntity) => void
+  render: (entity: PlaceSearchEntity, api: AppApi) => TemplateResult
+} & AsyncEvents<"search", PlaceSearchEntity, string, Place[], AppApi>

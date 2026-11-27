@@ -44,7 +44,7 @@
     "@capacitor/core": "^8.5.3",
     "@capacitor/geolocation": "^8.2.5",
     "@capacitor/haptics": "^8.0.2",
-    "@capawesome/capacitor-live-update": "^8.8.1",
+    "@capawesome/capacitor-live-update": "^8.9.0",
     "@fontsource/dm-sans": "^5.3.0",
     "@fontsource/titillium-web": "^5.3.0",
     "@iconify-icons/fa7-brands": "^2.0.0",
@@ -57,7 +57,7 @@
     "@inglorious/ui": "^9.20.3",
     "@inglorious/web": "^6.31.0",
     "@supabase/supabase-js": "^2.118.0",
-    "firebase": "^12.19.0"
+    "firebase": "^13.4.0"
   },
   "devDependencies": {
     "@capacitor/android": "^8.5.3",
@@ -68,8 +68,8 @@
     "@inglorious/eslint-config": "^1.2.0",
     "@inglorious/vite-plugin-hmr": "^1.1.0",
     "@types/node": "^26.4.1",
-    "@typescript-eslint/eslint-plugin": "^8.72.0",
-    "@typescript-eslint/parser": "^8.72.0",
+    "@typescript-eslint/eslint-plugin": "^8.74.0",
+    "@typescript-eslint/parser": "^8.74.0",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@vite-pwa/assets-generator": "^2.0.0",
     "eslint": "^10.13.0",
